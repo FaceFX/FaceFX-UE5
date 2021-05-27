@@ -68,11 +68,7 @@ public class FaceFXLib : ModuleRules
     /// <returns>The lib folder</returns>
     private string GetPlatformLibFolder(ReadOnlyTargetRules Target, string CompilerFolder)
     {
-        if (Target.Platform == UnrealTargetPlatform.Win32)
-        {
-            return Path.Combine(new[] { "windows", CompilerFolder, "Win32" });
-        }
-        else if (Target.Platform == UnrealTargetPlatform.Win64)
+        if (Target.Platform == UnrealTargetPlatform.Win64)
         {
             return Path.Combine(new[] { "windows", CompilerFolder, "x64" });
         }
@@ -87,10 +83,6 @@ public class FaceFXLib : ModuleRules
         else if (Target.Platform == UnrealTargetPlatform.Android)
         {
             return Path.Combine(new[] { "android" });
-        }
-        else if (Target.Platform == UnrealTargetPlatform.XboxOne)
-        {
-            return Path.Combine(new[] { "xboxone", "xdk", CompilerFolder });
         }
         else if (Target.Platform.ToString() == "XboxOneGDK")
         {
@@ -165,11 +157,7 @@ public class FaceFXLib : ModuleRules
 
         string PlatformFolder = GetPlatformLibFolder(Target, CompilerFolder);
 
-        if (Target.Platform == UnrealTargetPlatform.Win32)
-        {
-            FaceFXLib = "libfacefx.lib";
-        }
-        else if (Target.Platform == UnrealTargetPlatform.Win64)
+        if (Target.Platform == UnrealTargetPlatform.Win64)
         {
             FaceFXLib = "libfacefx.lib";
         }
@@ -184,10 +172,6 @@ public class FaceFXLib : ModuleRules
         else if (Target.Platform == UnrealTargetPlatform.Android)
         {
             FaceFXLib = "libfacefx.a";
-        }
-        else if (Target.Platform == UnrealTargetPlatform.XboxOne)
-        {
-            FaceFXLib = "libfacefx.lib";
         }
         else if (Target.Platform.ToString() == "XboxOneGDK")
         {

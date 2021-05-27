@@ -20,11 +20,9 @@
 			"LoadingPhase": "Default",
 			"WhitelistPlatforms": [
 				"Win64",
-				"Win32",
 				"Mac",
 				"IOS",
 				"Android",
-				"XboxOne",
 				"PS4",
 				"Switch"
 			]
