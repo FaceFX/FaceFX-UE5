@@ -45,6 +45,7 @@
 #include "Misc/FeedbackContext.h"
 #include "Misc/ConfigCacheIni.h"
 #include "Misc/Paths.h"
+#include "UObject/SavePackage.h"
 
 #define LOCTEXT_NAMESPACE "FaceFX"
 
@@ -652,7 +653,10 @@ void FFaceFXEditorTools::SavePackage(UPackage* Package, bool addToSc)
 
 	const FString PackagePath = Package->GetPathName();
 	const FString Filename = FPackageName::LongPackageNameToFilename(PackagePath, FPackageName::GetAssetPackageExtension());
-	GEditor->SavePackage(Package, nullptr, RF_Standalone, *Filename, GWarn);
+
+	FSavePackageArgs SaveArgs;
+	SaveArgs.TopLevelFlags = RF_Standalone;
+	UPackage::SavePackage(Package, nullptr, *Filename, SaveArgs);
 
 	ISourceControlProvider& SourceControlProvider = ISourceControlModule::Get().GetProvider();
 	if (addToSc && ISourceControlModule::Get().IsEnabled() && SourceControlProvider.IsAvailable() )

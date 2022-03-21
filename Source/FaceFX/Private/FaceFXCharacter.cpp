@@ -1196,7 +1196,7 @@ USkeletalMeshComponent* UFaceFXCharacter::GetOwningSkelMeshComponent() const
 
 UFaceFXComponent* UFaceFXCharacter::GetOwningFaceFXComponent() const
 {
-	return IsPendingKill() ? nullptr : Cast<UFaceFXComponent>(GetOuter());
+	return !IsValid(this) ? nullptr : Cast<UFaceFXComponent>(GetOuter());
 }
 
 void UFaceFXCharacter::UpdateTransforms()

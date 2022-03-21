@@ -28,7 +28,6 @@ SOFTWARE.
 #include "Widgets/Input/SCheckBox.h"
 #include "Widgets/Text/STextBlock.h"
 #include "Widgets/SBoxPanel.h"
-#include "EditorModeInterpolation.h"
 #include "ContentBrowserModule.h"
 #include "IContentBrowserSingleton.h"
 #include "Framework/MultiBox/MultiBoxBuilder.h"

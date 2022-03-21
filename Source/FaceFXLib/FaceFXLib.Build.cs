@@ -92,7 +92,7 @@ public class FaceFXLib : ModuleRules
         {
             return Path.Combine(new[] { "xboxseriesx", CompilerFolder });
         }
-        else if (Target.Platform == UnrealTargetPlatform.PS4)
+        else if (Target.Platform.ToString() == "PS4")
         {
             return Path.Combine(new[] { "ps4", CompilerFolder });
         }
@@ -100,7 +100,7 @@ public class FaceFXLib : ModuleRules
         {
             return Path.Combine(new[] { "ps5", CompilerFolder });
         }
-        else if (Target.Platform == UnrealTargetPlatform.Switch)
+        else if (Target.Platform.ToString() == "Switch")
         {
             return Path.Combine(new[] { "switch", CompilerFolder, "NX64" });
         }
@@ -126,13 +126,9 @@ public class FaceFXLib : ModuleRules
             throw new BuildException(System.String.Format("FaceFX: cannot find the FaceFX Runtime directory '{0}'", FaceFXDir));
         }
 
-        string CompilerFolder = "vs14";
+        string CompilerFolder = "vs16";
 
-        if (Target.WindowsPlatform.Compiler == WindowsCompiler.VisualStudio2017)
-        {
-            CompilerFolder = "vs15";
-        }
-        else if (Target.WindowsPlatform.Compiler == WindowsCompiler.VisualStudio2019)
+        if (Target.WindowsPlatform.Compiler == WindowsCompiler.VisualStudio2019)
         {
             CompilerFolder = "vs16";
 
@@ -143,6 +139,11 @@ public class FaceFXLib : ModuleRules
                 //fallback to vs15 folder
                 CompilerFolder = "vs15";
             }
+        }
+        else if (Target.WindowsPlatform.Compiler == WindowsCompiler.VisualStudio2022)
+        {
+            // TODO: for now fall back to vs16
+            CompilerFolder = "vs16";
         }
 
         // IMPORTANT NOTE FOR CONSOLES
@@ -181,7 +182,7 @@ public class FaceFXLib : ModuleRules
         {
             FaceFXLib = "libfacefx.lib";
         }
-        else if (Target.Platform == UnrealTargetPlatform.PS4)
+        else if (Target.Platform.ToString() == "PS4")
         {
             FaceFXLib = "libfacefx.a";
         }
@@ -189,7 +190,7 @@ public class FaceFXLib : ModuleRules
         {
             FaceFXLib = "libfacefx.a";
         }
-        else if (Target.Platform == UnrealTargetPlatform.Switch)
+        else if (Target.Platform.ToString() == "Switch")
         {
             FaceFXLib = "libfacefx.a";
         }

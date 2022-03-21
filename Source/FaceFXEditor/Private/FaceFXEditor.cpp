@@ -32,6 +32,7 @@
 #include "Editor.h"
 #include "Modules/ModuleManager.h"
 #include "ISettingsModule.h"
+#include "UObject/ObjectSaveContext.h"
 
 #define LOCTEXT_NAMESPACE "FaceFX"
 
@@ -60,7 +61,8 @@ class FFaceFXEditorModule : public FDefaultModuleImpl
 		}
 
 		OnEndPieHandle = FEditorDelegates::EndPIE.AddStatic(&FFaceFXEditorModule::OnEndPie);
-		OnPreSaveWorldHandle = FEditorDelegates::PreSaveWorld.AddStatic(&FFaceFXEditorModule::PreSaveWorld);
+
+		OnPreSaveWorldHandle = FEditorDelegates::PreSaveWorldWithContext.AddRaw(this, &FFaceFXEditorModule::PreSaveWorld);
 
 		RegisterSettings();
 	}
@@ -73,7 +75,7 @@ class FFaceFXEditorModule : public FDefaultModuleImpl
 		}
 
 		FEditorDelegates::EndPIE.Remove(OnEndPieHandle);
-		FEditorDelegates::PreSaveWorld.Remove(OnPreSaveWorldHandle);
+		FEditorDelegates::PreSaveWorldWithContext.Remove(OnPreSaveWorldHandle);
 
 		if (FModuleManager::Get().IsModuleLoaded("AssetTools"))
 		{
@@ -188,7 +190,7 @@ private:
 	}
 
 	/** Callback for when a world gets saved */
-	static void PreSaveWorld(uint32 SaveFlags, UWorld* World)
+	void PreSaveWorld(class UWorld* World, FObjectPreSaveContext ObjectSaveContext)
 	{
 		check(World);
 
