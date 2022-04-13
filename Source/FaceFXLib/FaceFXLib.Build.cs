@@ -149,7 +149,7 @@ public class FaceFXLib : ModuleRules
         // IMPORTANT NOTE FOR CONSOLES
         // ===========================
         //
-        // XboxOneGDK, XSX, and PS5 do not have public values in UnrealTargetPlatform in the public UE4 source, so they
+        // XboxOneGDK, XSX, and PS5 do not have public values in UnrealTargetPlatform in the public UE5 source, so they
         // cannot be included here or the plugin will not build for users without access to those platforms. That's why
         // they are checked for with strings in this file.
         //

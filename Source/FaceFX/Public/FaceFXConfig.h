@@ -30,16 +30,16 @@
 #if defined(FFX_VERSION)
     // Pre-v2 runtime or v2 runtime with v1.6 compatibility layer enabled.
     #if FFX_VERSION < FFX_MAKE_VERSION(2,0,0)
-        #error "FaceFX Runtime version 2.0.0 or greater is required to compile this version of the FaceFX UE4 plugin."
+        #error "FaceFX Runtime version 2.0.0 or greater is required to compile this version of the FaceFX UE5 plugin."
     #endif
 #elif defined(FX_VERSION)
     // v2 runtime.
     #if FX_VERSION < FX_MAKE_VERSION(2,0,0)
-        #error "FaceFX Runtime version 2.0.0 or greater is required to compile this version of the FaceFX UE4 plugin."
+        #error "FaceFX Runtime version 2.0.0 or greater is required to compile this version of the FaceFX UE5 plugin."
     #endif
 #else
     // Unknown runtime version.
-    #error "FaceFX Runtime version 2.0.0 or greater is required to compile this version of the FaceFX UE4 plugin."
+    #error "FaceFX Runtime version 2.0.0 or greater is required to compile this version of the FaceFX UE5 plugin."
 #endif
 
 #include "FaceFXConfig.generated.h"

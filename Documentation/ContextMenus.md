@@ -1,7 +1,7 @@
 Context Menus
 =============
 
-The FaceFX UE4 Plugin adds several new options to the Unreal Editor asset right-click context menus in the Unreal Editor.
+The FaceFX UE5 Plugin adds several new options to the Unreal Editor asset right-click context menus in the Unreal Editor.
 
 FaceFXActor Asset
 -----------------
@@ -24,7 +24,7 @@ Batch imports the actor and any modified animation via the **.ffxc** folder that
 
 ##### Set new FaceFX Studio Assets
 
-Assigns this actor to a different **.facefx** file. Use this to update the source data for the UE4 asset while still preserving all of the Blueprint asset references in UE4.
+Assigns this actor to a different **.facefx** file. Use this to update the source data for the UE5 asset while still preserving all of the Blueprint asset references in UE5.
 
 ##### Show FaceFX Asset Details
 

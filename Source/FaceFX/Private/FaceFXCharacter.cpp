@@ -1219,7 +1219,7 @@ void UFaceFXCharacter::UpdateTransforms()
 		{
 			const FxBoneTransform& XForm = FaceFXBoneTransforms[i];
 
-			// Revert rotaiton.z and translation.y to convert from FaceFX to UE4 coordinates.
+			// Revert rotaiton.z and translation.y to convert from FaceFX to UE5 coordinates.
 			BoneTransforms[i].SetComponents(
 				FQuat(XForm.rotation.x, -XForm.rotation.y, XForm.rotation.z, XForm.rotation.w),
 				FVector(XForm.translation.x, -XForm.translation.y, XForm.translation.z),

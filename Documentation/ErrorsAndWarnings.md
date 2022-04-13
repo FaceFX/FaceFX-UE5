@@ -12,7 +12,7 @@ You need to compile your **.facefx** file with the FaceFX Runtime plugin for Fac
 
 ##### Importing audio asset failed
 
-Make sure you only analyze **.wav** files from FaceFX Studio. UE4 can not import **.ogg** files for example.  
+Make sure you only analyze **.wav** files from FaceFX Studio. UE5 can not import **.ogg** files for example.
 
 ##### Audio file does not exist
 

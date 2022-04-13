@@ -35,12 +35,12 @@ const FString& UFaceFXEditorConfig::GetFaceFXPluginFolder() const
 		//looking up folder name used on the git repo
 		if (!FPaths::DirectoryExists(PluginFolderPath))
 		{
-			PluginFolderPath = FPaths::EnginePluginsDir() / TEXT("Runtime/FaceFX-UE4");
+			PluginFolderPath = FPaths::EnginePluginsDir() / TEXT("Runtime/FaceFX-UE5");
 		}
 
 		if (!FPaths::DirectoryExists(PluginFolderPath))
 		{
-			PluginFolderPath = FPaths::ProjectPluginsDir() / TEXT("FaceFX-UE4");
+			PluginFolderPath = FPaths::ProjectPluginsDir() / TEXT("FaceFX-UE5");
 		}
 	}
 	return PluginFolderPath;

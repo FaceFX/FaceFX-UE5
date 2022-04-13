@@ -1,7 +1,7 @@
 Configuration
 =============
 
-The FaceFX UE4 Plugin can be configured with several options contained in Plugins section of the Project Settings in
+The FaceFX UE5 Plugin can be configured with several options contained in Plugins section of the Project Settings in
 UnrealEd
 
 Editor

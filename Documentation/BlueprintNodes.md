@@ -1,7 +1,7 @@
 Blueprint Nodes
 ===============
 
-The FaceFX UE4 Plugin provides several Blueprint nodes, which are described here.
+The FaceFX UE5 Plugin provides several Blueprint nodes, which are described here.
 
 All FaceFX Blueprint nodes require a **FaceFX Component** to be wired to their respective **Target** slots. The FaceFX Setup Blueprint node requires the **Skel Mesh Comp** slot to be wired with the **Skeletal Mesh Component** to animate. The **Skel Mesh Comp** is optional for the other FaceFX Blueprint nodes (this is so a single Blueprint can drive multiple FaceFX characters). If it is not supplied, the first one found is used.
 

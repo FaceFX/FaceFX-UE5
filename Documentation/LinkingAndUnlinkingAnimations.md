@@ -1,7 +1,7 @@
 Linking and Unlinking Animations
 ================================
 
-When you import a FaceFX asset by dragging a **.facefx** file onto UE4, the animations created are linked to the actor. This does the following:
+When you import a FaceFX asset by dragging a **.facefx** file onto UE5, the animations created are linked to the actor. This does the following:
 
 + When the actor is loaded into memory, all of the animations (and associated audio files) are loaded into memory as well.
 
@@ -13,6 +13,6 @@ For games with lots of audio files, some effort needs to be taken to manage memo
 
 	1. The FaceFX Runtime plugin for FaceFX Studio uses a single compilation directory organized by **.facefx** name. Using multiple assets with the same name breaks the minimal rebuild feature.
 
-	2. The following warning may be displayed in UE4 when multiple **.facefx** assets share the same filename: *Skipped **.ffxanim** file with no audiomap entry.*
+	2. The following warning may be displayed in UE5 when multiple **.facefx** assets share the same filename: *Skipped **.ffxanim** file with no audiomap entry.*
 
 + **Unlinking animations from the actor (advanced)** - Using the right-click menu, animations can be unlinked from the actor. They can still be played on the actor (provided that they are compatible) by linking to them in a FaceFX **Play** Blueprint node. Beware that unlinked animations will become stale if you update your actor's **Face Graph** and never reimport the animation. Use this method if you have a lot of animations, but you lack discreet levels that you can break your content into. Memory will be managed by the Blueprint Classes that reference the FaceFX animations in FaceFX **Play** Blueprint nodes.

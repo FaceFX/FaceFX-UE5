@@ -133,8 +133,8 @@ bool FFaceFXAudioWwise::Play(float Position, UActorComponent** OutAudioComp)
 			}
 #endif //WITH_EDITOR
 
-			//Seek functionality within the current WWise UE4 plugin does not exist. Hence the playback from a specific location is not supported without changes to the Wwise plugin
-			//See: https://www.audiokinetic.com/qa/3013/possible-to-seek-in-ue4-integration
+			//Seek functionality within the current WWise UE5 plugin does not exist. Hence the playback from a specific location is not supported without changes to the Wwise plugin
+			//See: https://www.audiokinetic.com/qa/3013/possible-to-seek-in-UE5-integration
 			if (CurrentProgress > 0.F)
 			{
 				const bool SeekResult = AudioComp->Seek(CurrentProgress * 1000.F, SoundEvent, TEXT(""));

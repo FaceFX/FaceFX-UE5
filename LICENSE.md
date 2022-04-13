@@ -1,9 +1,9 @@
-FaceFX Unreal Engine 4 Plugin License
+FaceFX Unreal Engine 5 Plugin License
 =====================================
 
-The FaceFX Unreal Engine 4 source code is licensed under the MIT License as
-shown below. The FaceFX Unreal Engine 4 source code is the source code contained
-in this repository that interfaces with Unreal Engine 4.
+The FaceFX Unreal Engine 5 source code is licensed under the MIT License as
+shown below. The FaceFX Unreal Engine 5 source code is the source code contained
+in this repository that interfaces with Unreal Engine 5.
 
 The MIT License (MIT)
 =====================
@@ -32,7 +32,7 @@ THE SOFTWARE.
 
 The FaceFX Runtime is licensed under the FaceFX Runtime End User License as
 shown below. The FaceFX Runtime is obtained directly from OC3 Entertainment and
-is not contained in this repository. Once the FaceFX Unreal Engine 4 source
+is not contained in this repository. Once the FaceFX Unreal Engine 5 source
 code is compiled and linked with the FaceFX Runtime, the resulting binary falls
 under the FaceFX Runtime End User License.
 

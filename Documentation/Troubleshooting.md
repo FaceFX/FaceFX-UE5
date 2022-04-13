@@ -3,7 +3,7 @@ Troubleshooting
 
 #### Errors when packaging
 
-There is a known bug in UE4 where it requires all plugin Build.cs files to be present when packaging a game. This effectively means that in order to package your game you need full source to the FaceFX plugin installed.
+There is a known bug in UE5 where it requires all plugin Build.cs files to be present when packaging a game. This effectively means that in order to package your game you need full source to the FaceFX plugin installed.
 
 If you are using the GitHub source, this is a non-issue. However, if you are using the Epic Launcher version of the engine, it means you need to get the full source to the FaceFX plugin, including the FaceFX Runtime library, and set it up in the Epic Launcher version of your engine. Place the source code in the same location you put the pre-built binaries of the FaceFX plugin (see the [README.md](README.md) file located in this repository).
 

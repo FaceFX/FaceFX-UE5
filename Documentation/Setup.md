@@ -31,16 +31,16 @@ You can also copy the version of **ffxc.exe** you prefer from **facefx/tools/com
 
 If you do not perform this step the plugin will prompt you for the location of **ffxc.exe** when you open its options dialog. **ffxc.exe** can be found in the **facefx/tools/compiler/bin/windows** folder of the [FaceFX Runtime distribution](https://www.facefx.com/runtime-downloads).
 
-Unreal Engine 4
+Unreal Engine 5
 ---------------
 
-#### FaceFX UE4 Plugin Setup
+#### FaceFX UE5 Plugin Setup
 
-Installation and setup instructions for the FaceFX UE4 Plugin can be found in the [README](../README.md).
+Installation and setup instructions for the FaceFX UE5 Plugin can be found in the [README](../README.md).
 
 #### Character Setup
 
-In order for the FaceFX UE4 Plugin to control a character, the character first needs to be properly set up with an **Animation Blueprint** and a **Blueprint Class**.
+In order for the FaceFX UE5 Plugin to control a character, the character first needs to be properly set up with an **Animation Blueprint** and a **Blueprint Class**.
 
 + Create an **Animation Blueprint** for the character and add a **Blend FaceFX Animation** node. The **Blend FaceFX Animation** node needs to be connected to the **Final Animation Pose** node via a **Component To Local** node.
 
