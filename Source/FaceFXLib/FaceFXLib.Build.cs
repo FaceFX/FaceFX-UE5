@@ -126,24 +126,12 @@ public class FaceFXLib : ModuleRules
             throw new BuildException(System.String.Format("FaceFX: cannot find the FaceFX Runtime directory '{0}'", FaceFXDir));
         }
 
+        // Default to VS2019
         string CompilerFolder = "vs16";
 
-        if (Target.WindowsPlatform.Compiler == WindowsCompiler.VisualStudio2019)
+        if (Target.WindowsPlatform.Compiler == WindowsCompiler.VisualStudio2022)
         {
-            CompilerFolder = "vs16";
-
-            //check if that folder exists (older FaceFX libs may not have them)
-            string LibFolder = System.IO.Path.Combine(new[] { FaceFXDir, "bin", GetPlatformLibFolder(Target, CompilerFolder) });
-            if (!Directory.Exists(LibFolder))
-            {
-                //fallback to vs15 folder
-                CompilerFolder = "vs15";
-            }
-        }
-        else if (Target.WindowsPlatform.Compiler == WindowsCompiler.VisualStudio2022)
-        {
-            // TODO: for now fall back to vs16
-            CompilerFolder = "vs16";
+            CompilerFolder = "vs17";
         }
 
         // IMPORTANT NOTE FOR CONSOLES
