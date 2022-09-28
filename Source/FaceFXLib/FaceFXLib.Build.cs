@@ -86,7 +86,7 @@ public class FaceFXLib : ModuleRules
         }
         else if (Target.Platform.ToString() == "XboxOneGDK")
         {
-            return Path.Combine(new[] { "xboxone", "gdk", CompilerFolder });
+            return Path.Combine(new[] { "xboxone", CompilerFolder });
         }
         else if (Target.Platform.ToString() == "XSX")
         {
