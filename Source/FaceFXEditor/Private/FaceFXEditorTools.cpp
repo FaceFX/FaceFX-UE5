@@ -328,8 +328,11 @@ bool FFaceFXEditorTools::ImportFaceFXAsset(UFaceFXAsset* Asset, const FString& A
 		return false;
 	}
 
+
 	const FString CompilationFolder = GetCompilationFolder(AssetPath);
-	const bool ImportResult = LoadFromCompilationFolder(Asset, CompilationFolder, OutResultMessages);
+	USoundWaveRegistry SoundRegistry;
+
+	const bool ImportResult = LoadFromCompilationFolder(Asset, CompilationFolder, SoundRegistry, OutResultMessages);
 
 	BeforeDeletionCallback.ExecuteIfBound(Asset, CompilationFolder, ImportResult, OutResultMessages);
 
@@ -482,6 +485,7 @@ bool FFaceFXEditorTools::ReimportOrCreateAnimAssets(const FString& CompilationFo
 
 	bool Result = true;
 
+	// Build the anim registry if IsImportLookupAnimation is true.
 	UFaceFXAnimRegistry AnimRegistry;
 
 	if (UFaceFXEditorConfig::Get().IsImportLookupAnimation() && FaceFXActor)
@@ -526,9 +530,40 @@ bool FFaceFXEditorTools::ReimportOrCreateAnimAssets(const FString& CompilationFo
 		}
 	}
 
+	// Build the audio registry if IsImportLookupAudio is true.
+	USoundWaveRegistry SoundRegistry;
+
+	if (UFaceFXEditorConfig::Get().IsImportLookupAudio() && FaceFXActor)
+	{
+		TArray<FAssetData> SoundAssets;
+
+		IFileManager& FileManager = IFileManager::Get();
+
+		IAssetRegistry& AssetRegistry = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(AssetRegistryConstants::ModuleName).Get();
+		if (AssetRegistry.GetAssetsByClass(USoundWave::StaticClass()->GetFName(), SoundAssets))
+		{
+			for (const FAssetData& AssetData : SoundAssets)
+			{
+				USoundWave* Asset = Cast<USoundWave>(AssetData.GetAsset());
+
+				if (!Asset)
+				{
+					//synchronously load asset.
+					Asset = Cast<USoundWave>(StaticLoadObject(USoundWave::StaticClass(), nullptr, *AssetData.ToSoftObjectPath().ToString()));
+				}
+
+				checkf(Asset, TEXT("Internal Error. USoundWave asset not loaded. %s"), *AssetData.ToSoftObjectPath().ToString());
+
+				const FString AssetFileAbs = *Asset->AssetImportData->GetFirstFilename();
+
+				SoundRegistry.Emplace(AssetFileAbs, *AssetData.ToSoftObjectPath().ToString());
+			}
+		}
+	}
+
 	for (const FString& Filename : Filenames)
 	{
-		if (UFaceFXAnim* Asset = ReimportOrCreateAnimAsset(CompilationFolder, AnimGroup, FPaths::GetCleanFilename(Filename), PackageName, FaceFXActor, AssetTools, AnimRegistry, OutResultMessages, Factory))
+		if (UFaceFXAnim* Asset = ReimportOrCreateAnimAsset(CompilationFolder, AnimGroup, FPaths::GetCleanFilename(Filename), PackageName, FaceFXActor, AssetTools, AnimRegistry, SoundRegistry, OutResultMessages, Factory))
 		{
 			if (OutResult)
 			{
@@ -544,7 +579,7 @@ bool FFaceFXEditorTools::ReimportOrCreateAnimAssets(const FString& CompilationFo
 	return Result;
 }
 
-UFaceFXAnim* FFaceFXEditorTools::ReimportOrCreateAnimAsset(const FString& CompilationFolder, const FString& AnimGroup, const FString& AnimFile, const FString& PackageName, UFaceFXActor* FaceFXActor, IAssetTools& AssetTools, const UFaceFXAnimRegistry& AnimRegistry, FFaceFXImportResult& OutResultMessages, UFactory* Factory)
+UFaceFXAnim* FFaceFXEditorTools::ReimportOrCreateAnimAsset(const FString& CompilationFolder, const FString& AnimGroup, const FString& AnimFile, const FString& PackageName, UFaceFXActor* FaceFXActor, IAssetTools& AssetTools, const UFaceFXAnimRegistry& AnimRegistry, const USoundWaveRegistry& SoundRegistry, FFaceFXImportResult& OutResultMessages, UFactory* Factory)
 {
 	if (!FaceFXActor)
 	{
@@ -565,7 +600,7 @@ UFaceFXAnim* FFaceFXEditorTools::ReimportOrCreateAnimAsset(const FString& Compil
 
 		if (ExistingAnim)
 		{
-			if (LoadFromCompilationFolder(ExistingAnim, AnimGroupName, AnimIdName, CompilationFolder, OutResultMessages))
+			if (LoadFromCompilationFolder(ExistingAnim, AnimGroupName, AnimIdName, CompilationFolder, SoundRegistry, OutResultMessages))
 			{
 #if FACEFX_USEANIMATIONLINKAGE
 				//link to the new asset
@@ -602,7 +637,7 @@ UFaceFXAnim* FFaceFXEditorTools::ReimportOrCreateAnimAsset(const FString& Compil
 		//copy asset sources
 		NewAsset->SetSources(FaceFXActor->GetAssetName(), FaceFXActor->GetAssetFolder());
 
-		if (LoadFromCompilationFolder(NewAsset, AnimGroupName, AnimIdName, CompilationFolder, OutResultMessages))
+		if (LoadFromCompilationFolder(NewAsset, AnimGroupName, AnimIdName, CompilationFolder, SoundRegistry, OutResultMessages))
 		{
 #if FACEFX_USEANIMATIONLINKAGE
 			//link to the new asset
@@ -662,7 +697,7 @@ void FFaceFXEditorTools::SavePackage(UPackage* Package, bool addToSc)
 	}
 }
 
-bool FFaceFXEditorTools::LoadFromCompilationFolder(UFaceFXAsset* Asset, const FString& Folder, FFaceFXImportResult& OutResultMessages)
+bool FFaceFXEditorTools::LoadFromCompilationFolder(UFaceFXAsset* Asset, const FString& Folder, const USoundWaveRegistry& SoundRegistry, FFaceFXImportResult& OutResultMessages)
 {
 	checkf(Asset, TEXT("Missing asset"));
 
@@ -673,7 +708,7 @@ bool FFaceFXEditorTools::LoadFromCompilationFolder(UFaceFXAsset* Asset, const FS
 
 	if (auto AnimAsset = Cast<UFaceFXAnim>(Asset))
 	{
-		return LoadFromCompilationFolder(AnimAsset, Folder, OutResultMessages);
+		return LoadFromCompilationFolder(AnimAsset, Folder, SoundRegistry, OutResultMessages);
 	}
 
 	checkf(false, TEXT("Unknown asset type"));
@@ -721,7 +756,7 @@ bool FFaceFXEditorTools::LoadFromCompilationFolder(UFaceFXActor* Asset, const FS
     return LoadCompiledActorData(Asset, Folder, OutResultMessages);
 }
 
-bool FFaceFXEditorTools::LoadFromCompilationFolder(UFaceFXAnim* Asset, const FString& Folder, FFaceFXImportResult& OutResultMessages)
+bool FFaceFXEditorTools::LoadFromCompilationFolder(UFaceFXAnim* Asset, const FString& Folder, const USoundWaveRegistry& SoundRegistry, FFaceFXImportResult& OutResultMessages)
 {
 	checkf(Asset, TEXT("Missing asset"));
 
@@ -865,10 +900,10 @@ bool FFaceFXEditorTools::LoadFromCompilationFolder(UFaceFXAnim* Asset, const FSt
 	}
 
 	//as a last step load the audio asset if desired (settings) and supported by the selected audio system
-	return !UFaceFXEditorConfig::Get().IsImportAudio() || !FFaceFXAudio::IsUsingSoundWaveAssets() || LoadAudio(Asset, Folder, OutResultMessages);
+	return !UFaceFXEditorConfig::Get().IsImportAudio() || !FFaceFXAudio::IsUsingSoundWaveAssets() || LoadAudio(Asset, Folder, SoundRegistry, OutResultMessages);
 }
 
-bool FFaceFXEditorTools::LoadAudio(UFaceFXAnim* Asset, const FString& Folder, FFaceFXImportResult& OutResultMessages)
+bool FFaceFXEditorTools::LoadAudio(UFaceFXAnim* Asset, const FString& Folder, const USoundWaveRegistry& SoundRegistry, FFaceFXImportResult& OutResultMessages)
 {
 	TArray<FFaceFXAudioMapEntry> AudioMapData;
 	if (LoadAudioMapData(Asset, Folder, AudioMapData, OutResultMessages))
@@ -907,10 +942,18 @@ bool FFaceFXEditorTools::LoadAudio(UFaceFXAnim* Asset, const FString& Folder, FF
 				if (Asset->GetAbsoluteAudioPath(AudioFile) && FPaths::FileExists(AudioFile))
 				{
 					//try to find sound asset
-					if (UFaceFXEditorConfig::Get().IsImportLookupAudio())
+					if (SoundRegistry.Num() > 0)
 					{
 						//try to lookup audio
-						Asset->Audio = LocateAudio(AudioFile);
+						const FString key = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*AudioFile);
+						const FString* pValue = SoundRegistry.Find(key);
+
+						Asset->Audio = (pValue ? Cast<USoundWave>(StaticLoadObject(USoundWave::StaticClass(), nullptr, *(*pValue))) : nullptr);
+
+						if (!Asset->Audio)
+						{
+							UE_LOG(LogFaceFX, Warning, TEXT("Unable to find USoundWave asset for: %s. Creating a new one..."), *AudioFile);
+						}
 					}
 
 					if (!Asset->IsAudioAssetSet())
@@ -989,42 +1032,7 @@ bool FFaceFXEditorTools::LoadAudio(UFaceFXAnim* Asset, const FString& Folder, FF
 	return false;
 }
 
-TSoftObjectPtr<USoundWave> FFaceFXEditorTools::LocateAudio(const FString& AudioSourceFile)
-{
-	TArray<FAssetData> SoundAssets;
-
-	IFileManager& FileManager = IFileManager::Get();
-	const FString AudioSourceFileAbs = FileManager.ConvertToAbsolutePathForExternalAppForRead(*AudioSourceFile);
-
-	IAssetRegistry& AssetRegistry = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(AssetRegistryConstants::ModuleName).Get();
-	if (AssetRegistry.GetAssetsByClass(USoundWave::StaticClass()->GetFName(), SoundAssets))
-	{
-		for (const FAssetData& AssetData : SoundAssets)
-		{
-			USoundWave* Asset = Cast<USoundWave>(AssetData.GetAsset());
-
-			if (!Asset)
-			{
-				//synchronously load sound asset
-				Asset = Cast<USoundWave>(StaticLoadObject(USoundWave::StaticClass(), nullptr, *AssetData.ToSoftObjectPath().ToString()));
-			}
-
-			checkf(Asset, TEXT("Internal Error. USoundWave asset not loaded. %s"), *AssetData.ToSoftObjectPath().ToString());
-
-			const FString AssetFileAbs = *Asset->AssetImportData->GetFirstFilename();
-			if (AssetFileAbs.Equals(AudioSourceFileAbs, ESearchCase::IgnoreCase))
-			{
-				return Asset;
-			}
-		}
-	}
-
-	UE_LOG(LogFaceFX, Warning, TEXT("FFaceFXEditorTools::LocateAudio. Unable to find USoundWave assets for: %s. Creating a new one..."), *AudioSourceFile);
-
-	return nullptr;
-}
-
-bool FFaceFXEditorTools::LoadFromCompilationFolder(UFaceFXAnim* Asset, const FName& Group, const FName& Animation, const FString& Folder, FFaceFXImportResult& OutResultMessages)
+bool FFaceFXEditorTools::LoadFromCompilationFolder(UFaceFXAnim* Asset, const FName& Group, const FName& Animation, const FString& Folder, const USoundWaveRegistry& SoundRegistry, FFaceFXImportResult& OutResultMessages)
 {
 	checkf(Asset, TEXT("Missing asset"));
 
@@ -1035,7 +1043,7 @@ bool FFaceFXEditorTools::LoadFromCompilationFolder(UFaceFXAnim* Asset, const FNa
 	}
 	Asset->Id.Group = Group;
 	Asset->Id.Name = Animation;
-	return LoadFromCompilationFolder(Asset, Folder, OutResultMessages);
+	return LoadFromCompilationFolder(Asset, Folder, SoundRegistry, OutResultMessages);
 }
 
 bool FFaceFXEditorTools::InitializeFromFile(UFaceFXAsset* Asset, const FString& File, FFaceFXImportResult& OutResultMessages, const FCompilationBeforeDeletionDelegate& BeforeDeletionCallback, bool IsAssetNew)
