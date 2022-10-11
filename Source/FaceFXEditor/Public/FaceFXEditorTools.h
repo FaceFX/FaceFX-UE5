@@ -391,6 +391,9 @@ private:
 /** The callback for when assets get imported and we want to do something before the compiled data gets deleted */
 DECLARE_DELEGATE_FourParams(FCompilationBeforeDeletionDelegate, UObject* /** Asset */, const FString& /* CompilationFolder */, bool /** ImportResult */, FFaceFXImportResult& /** ResultMessages */);
 
+/** FaceFX animation registry. Used to speed up lookups when IsImportLookupAnimation is true. */
+typedef TMap<FString, FString> UFaceFXAnimRegistry;
+
 /** Editor specific FaceFX functions */
 struct FACEFXEDITOR_API FFaceFXEditorTools
 {
@@ -472,11 +475,12 @@ struct FACEFXEDITOR_API FFaceFXEditorTools
 	* @param PackageName The name of the package
 	* @param FaceFXActor The FaceFX actor asset that shall be linked to that new asset
 	* @param AssetTools The asset tools instance to use
+	* @param AnimRegistry The FaceFX animation registry used to speed up lookups (empty if !IsImportLookupAnimation)
 	* @param OutResultMessages The result set
 	* @param Factory The factory to use. Keep at nullptr to directly create an instance
 	* @returns The created asset, nullptr if failed
 	*/
-	static class UFaceFXAnim* ReimportOrCreateAnimAsset(const FString& CompilationFolder, const FString& AnimGroup, const FString& AnimFile, const FString& PackageName, class UFaceFXActor* FaceFXActor, class IAssetTools& AssetTools, FFaceFXImportResult& OutResultMessages, class UFactory* Factory = nullptr);
+	static class UFaceFXAnim* ReimportOrCreateAnimAsset(const FString& CompilationFolder, const FString& AnimGroup, const FString& AnimFile, const FString& PackageName, class UFaceFXActor* FaceFXActor, class IAssetTools& AssetTools, const UFaceFXAnimRegistry& AnimRegistry, FFaceFXImportResult& OutResultMessages, class UFactory* Factory = nullptr);
 
 	/**
 	* Performs steps to store an asset physically and in source control

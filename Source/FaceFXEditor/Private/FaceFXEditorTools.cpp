@@ -97,61 +97,6 @@ FString GetAnimAssetFileName(const FString& Folder, const FString& Group, const 
 	return Folder / Group / (AnimationId + FACEFX_FILEEXT_ANIM);
 }
 
-/**
-* Finds a UFaceFXAnim asset that is linked to the same source file
-* @returns The asset that links to the same source file or nullptr if not found
-*/
-UFaceFXAnim* FindAnimationAsset(const FString& SourceAssetFolder, const FString& SourceAssetFile, const FName& AnimGroup, const FName& AnimName)
-{
-	if (SourceAssetFolder.IsEmpty() || SourceAssetFile.IsEmpty() || AnimGroup.IsNone() || AnimName.IsNone())
-	{
-		//sanity check
-		return nullptr;
-	}
-
-	IFileManager& FileManager = IFileManager::Get();
-
-	FString SourceAssetFolderAbs;
-
-	TArray<FAssetData> Assets;
-
-	IAssetRegistry& AssetRegistry = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(AssetRegistryConstants::ModuleName).Get();
-	if (AssetRegistry.GetAssetsByClass(UFaceFXAnim::StaticClass()->GetFName(), Assets))
-	{
-		for (const FAssetData& AssetData : Assets)
-		{
-			UFaceFXAnim* Asset = Cast<UFaceFXAnim>(AssetData.GetAsset());
-
-			if (!Asset)
-			{
-				//synchronously load sound asset
-				Asset = Cast<UFaceFXAnim>(StaticLoadObject(UFaceFXAnim::StaticClass(), nullptr, *AssetData.ToSoftObjectPath().ToString()));
-			}
-
-			checkf(Asset, TEXT("Internal Error. UFaceFXAnim asset not loaded. %s"), *AssetData.ToSoftObjectPath().ToString());
-
-			//check if the anim refers to the same group/id and belong to the same source .facefx
-			const FFaceFXAnimId& AssetAnimId = Asset->GetId();
-			if (AssetAnimId.Group == AnimGroup && AssetAnimId.Name == AnimName && SourceAssetFile.Equals(Asset->GetAssetName(), ESearchCase::IgnoreCase))
-			{
-				if (SourceAssetFolderAbs.IsEmpty())
-				{
-					//lazy conversion
-					SourceAssetFolderAbs = FileManager.ConvertToAbsolutePathForExternalAppForRead(*SourceAssetFolder);
-				}
-
-				const FString AssetFolderAbs = FileManager.ConvertToAbsolutePathForExternalAppForRead(*Asset->GetAssetFolder());
-				if (AssetFolderAbs.Equals(SourceAssetFolderAbs, ESearchCase::IgnoreCase))
-				{
-					return Asset;
-				}
-			}
-		}
-	}
-
-	return nullptr;
-}
-
 /** A single audio map entry*/
 struct FFaceFXAudioMapEntry
 {
@@ -537,9 +482,53 @@ bool FFaceFXEditorTools::ReimportOrCreateAnimAssets(const FString& CompilationFo
 
 	bool Result = true;
 
+	UFaceFXAnimRegistry AnimRegistry;
+
+	if (UFaceFXEditorConfig::Get().IsImportLookupAnimation() && FaceFXActor)
+	{
+		IFileManager& FileManager = IFileManager::Get();
+
+		TArray<FAssetData> Assets;
+
+		IAssetRegistry& AssetRegistry = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(AssetRegistryConstants::ModuleName).Get();
+
+		const FString& SourceAssetFile = FaceFXActor->GetAssetName();
+		const FString SourceAssetFolderAbs = FileManager.ConvertToAbsolutePathForExternalAppForRead(*FaceFXActor->GetAssetFolder());
+
+		if (!SourceAssetFile.IsEmpty() && !SourceAssetFile.IsEmpty() && AssetRegistry.GetAssetsByClass(UFaceFXAnim::StaticClass()->GetFName(), Assets))
+		{
+			for (const FAssetData& AssetData : Assets)
+			{
+				UFaceFXAnim* Asset = Cast<UFaceFXAnim>(AssetData.GetAsset());
+
+				if (!Asset)
+				{
+					// Synchronously load asset.
+					Asset = Cast<UFaceFXAnim>(StaticLoadObject(UFaceFXAnim::StaticClass(), nullptr, *AssetData.ToSoftObjectPath().ToString()));
+				}
+
+				checkf(Asset, TEXT("Internal Error. UFaceFXAnim asset not loaded. %s"), *AssetData.ToSoftObjectPath().ToString());
+
+				const FFaceFXAnimId& AssetAnimId = Asset->GetId();
+
+				// Sanity checks.
+				if (AssetAnimId.Group.IsNone() || AssetAnimId.Name.IsNone())
+				{
+					continue;
+				}
+
+				const FString AssetFolderAbs = FileManager.ConvertToAbsolutePathForExternalAppForRead(*Asset->GetAssetFolder());
+				if (AssetFolderAbs.Equals(SourceAssetFolderAbs, ESearchCase::IgnoreCase))
+				{
+					AnimRegistry.Emplace(FString::Printf(TEXT("%s_%s_%s"), *SourceAssetFile, *AssetAnimId.Group.ToString(), *AssetAnimId.Name.ToString()), *AssetData.ToSoftObjectPath().ToString());
+				}
+			}
+		}
+	}
+
 	for (const FString& Filename : Filenames)
 	{
-		if (UFaceFXAnim* Asset = ReimportOrCreateAnimAsset(CompilationFolder, AnimGroup, FPaths::GetCleanFilename(Filename), PackageName, FaceFXActor, AssetTools, OutResultMessages, Factory))
+		if (UFaceFXAnim* Asset = ReimportOrCreateAnimAsset(CompilationFolder, AnimGroup, FPaths::GetCleanFilename(Filename), PackageName, FaceFXActor, AssetTools, AnimRegistry, OutResultMessages, Factory))
 		{
 			if (OutResult)
 			{
@@ -555,7 +544,7 @@ bool FFaceFXEditorTools::ReimportOrCreateAnimAssets(const FString& CompilationFo
 	return Result;
 }
 
-UFaceFXAnim* FFaceFXEditorTools::ReimportOrCreateAnimAsset(const FString& CompilationFolder, const FString& AnimGroup, const FString& AnimFile, const FString& PackageName, UFaceFXActor* FaceFXActor, IAssetTools& AssetTools, FFaceFXImportResult& OutResultMessages, UFactory* Factory)
+UFaceFXAnim* FFaceFXEditorTools::ReimportOrCreateAnimAsset(const FString& CompilationFolder, const FString& AnimGroup, const FString& AnimFile, const FString& PackageName, UFaceFXActor* FaceFXActor, IAssetTools& AssetTools, const UFaceFXAnimRegistry& AnimRegistry, FFaceFXImportResult& OutResultMessages, UFactory* Factory)
 {
 	if (!FaceFXActor)
 	{
@@ -567,12 +556,14 @@ UFaceFXAnim* FFaceFXEditorTools::ReimportOrCreateAnimAsset(const FString& Compil
 	const FName AnimIdName = FName(*AnimId);
 
 	//First try to find an existing Animation Asset that links to the same animation file
-	const FString Filename = GetAnimAssetFileName(CompilationFolder, AnimGroup, AnimFile);
-
-	if (UFaceFXEditorConfig::Get().IsImportLookupAnimation())
+	if (AnimRegistry.Num() > 0)
 	{
-		//Try to find an existing UFaceFXAnim asset that is using the same source .ffxanim file which we could reuse
-		if (UFaceFXAnim* ExistingAnim = FindAnimationAsset(FaceFXActor->GetAssetFolder(), FaceFXActor->GetAssetName(), AnimGroupName, AnimIdName))
+		const FString key = FString::Printf(TEXT("%s_%s_%s"), *FaceFXActor->GetAssetName(), *AnimGroup, *AnimId);
+		const FString* pValue = AnimRegistry.Find(key);
+
+		UFaceFXAnim* ExistingAnim = (pValue ? Cast<UFaceFXAnim>(StaticLoadObject(UFaceFXAnim::StaticClass(), nullptr, *(*pValue))) : nullptr);
+
+		if (ExistingAnim)
 		{
 			if (LoadFromCompilationFolder(ExistingAnim, AnimGroupName, AnimIdName, CompilationFolder, OutResultMessages))
 			{
