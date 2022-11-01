@@ -108,7 +108,7 @@ void FAssetTypeActions_FaceFXAnim::ExecuteLink(TArray<TWeakObjectPtr<UObject>> O
 {
 	FOpenAssetDialogConfig OpenConfig;
 	OpenConfig.DialogTitleOverride = LOCTEXT("Asset_LinkFXAnimSelectTitle","Select Actor Asset To Link With");
-	OpenConfig.AssetClassNames.Add(UFaceFXActor::StaticClass()->GetFName());
+	OpenConfig.AssetClassNames.Add(UFaceFXActor::StaticClass()->GetClassPathName());
 	OpenConfig.bAllowMultipleSelection = true;
 
 	FContentBrowserModule& ContentBrowserModule = FModuleManager::LoadModuleChecked<FContentBrowserModule>("ContentBrowser");
@@ -119,7 +119,7 @@ void FAssetTypeActions_FaceFXAnim::ExecuteUnlink(TArray<TWeakObjectPtr<UObject>>
 {
 	FOpenAssetDialogConfig OpenConfig;
 	OpenConfig.DialogTitleOverride = LOCTEXT("Asset_UnlinkFXAnimSelectTitle","Select Actor Asset To Unlink From");
-	OpenConfig.AssetClassNames.Add(UFaceFXActor::StaticClass()->GetFName());
+	OpenConfig.AssetClassNames.Add(UFaceFXActor::StaticClass()->GetClassPathName());
 	OpenConfig.bAllowMultipleSelection = true;
 
 	FContentBrowserModule& ContentBrowserModule = FModuleManager::LoadModuleChecked<FContentBrowserModule>("ContentBrowser");
