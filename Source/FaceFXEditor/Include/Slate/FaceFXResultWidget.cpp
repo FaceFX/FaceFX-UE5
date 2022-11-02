@@ -75,7 +75,7 @@ void FFaceFXAssetRefWidget::Construct(const FArguments& Args)
 			[
 				SNew(SImage)
 				.ColorAndOpacity(FSlateColor::UseForeground())
-				.Image(FEditorStyle::GetBrush(TEXT("PropertyWindow.Button_Browse")))
+				.Image(FAppStyle::GetBrush(TEXT("PropertyWindow.Button_Browse")))
 			]
 		]
 
@@ -122,7 +122,7 @@ void FFaceFXResultWidget::Construct(const FArguments& Args)
 		+SScrollBox::Slot()
 		[
 			SNew(SBorder)
-			.BorderImage( FEditorStyle::GetBrush("Menu.Background") )
+			.BorderImage(FAppStyle::GetBrush("Menu.Background"))
 			//.BorderBackgroundColor(FColor::White)
 			.Content()
 			[

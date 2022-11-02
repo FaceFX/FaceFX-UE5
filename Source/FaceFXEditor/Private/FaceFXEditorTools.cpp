@@ -34,7 +34,7 @@
 #include "ISourceControlProvider.h"
 #include "SourceControlOperations.h"
 #include "ISourceControlOperation.h"
-#include "AssetRegistryModule.h"
+#include "AssetRegistry/AssetRegistryModule.h"
 #include "ContentBrowserModule.h"
 #include "Sound/SoundWave.h"
 #include "Editor.h"
@@ -499,7 +499,7 @@ bool FFaceFXEditorTools::ReimportOrCreateAnimAssets(const FString& CompilationFo
 		const FString& SourceAssetFile = FaceFXActor->GetAssetName();
 		const FString SourceAssetFolderAbs = FileManager.ConvertToAbsolutePathForExternalAppForRead(*FaceFXActor->GetAssetFolder());
 
-		if (!SourceAssetFile.IsEmpty() && !SourceAssetFile.IsEmpty() && AssetRegistry.GetAssetsByClass(UFaceFXAnim::StaticClass()->GetFName(), Assets))
+		if (!SourceAssetFile.IsEmpty() && !SourceAssetFile.IsEmpty() && AssetRegistry.GetAssetsByClass(UFaceFXAnim::StaticClass()->GetClassPathName(), Assets))
 		{
 			for (const FAssetData& AssetData : Assets)
 			{
@@ -540,7 +540,7 @@ bool FFaceFXEditorTools::ReimportOrCreateAnimAssets(const FString& CompilationFo
 		IFileManager& FileManager = IFileManager::Get();
 
 		IAssetRegistry& AssetRegistry = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(AssetRegistryConstants::ModuleName).Get();
-		if (AssetRegistry.GetAssetsByClass(USoundWave::StaticClass()->GetFName(), SoundAssets))
+		if (AssetRegistry.GetAssetsByClass(USoundWave::StaticClass()->GetClassPathName(), SoundAssets))
 		{
 			for (const FAssetData& AssetData : SoundAssets)
 			{
@@ -1099,7 +1099,6 @@ void FFaceFXEditorTools::ContentBrowserFocusAsset(const FSoftObjectPath& Asset)
 	if (!AssetObj)
 	{
 		const FString AssetStr = Asset.ToString();
-		AssetData.ObjectPath = FName(*AssetStr);
 		AssetData.PackagePath = FName(*FPackageName::GetLongPackagePath(AssetStr));
 		AssetData.PackageName = FName(*FPackageName::GetShortName(AssetStr));
 	}
@@ -1124,7 +1123,7 @@ void FFaceFXEditorTools::ShowError(const FText& Msg)
 	FNotificationInfo Info(Msg);
 	Info.ExpireDuration = 10.F;
 	Info.bUseLargeFont = false;
-	Info.Image = FEditorStyle::GetBrush(TEXT("MessageLog.Error"));
+	Info.Image = FAppStyle::GetBrush(TEXT("MessageLog.Error"));
 	FSlateNotificationManager::Get().AddNotification(Info);
 }
 
@@ -1133,7 +1132,7 @@ void FFaceFXEditorTools::ShowInfo(const FText& Msg)
 	FNotificationInfo Info(Msg);
 	Info.ExpireDuration = 10.F;
 	Info.bUseLargeFont = false;
-	Info.Image = FEditorStyle::GetBrush(TEXT("Icons.Info"));
+	Info.Image = FAppStyle::GetBrush(TEXT("Icons.Info"));
 	FSlateNotificationManager::Get().AddNotification(Info);
 }
 

@@ -68,12 +68,12 @@ void FFaceFXComboChoiceWidget::Construct(const FArguments& Args)
 		Options.Add(MakeShareable(new FString(Option)));
 	}
 
-	FSlateFontInfo MessageFont( FEditorStyle::GetFontStyle(TEXT("StandardDialog.LargeFont")));
+	FSlateFontInfo MessageFont(FAppStyle::GetFontStyle(TEXT("StandardDialog.LargeFont")));
 
 	ChildSlot
 		[
 			SNew(SBorder)
-			.BorderImage(FEditorStyle::GetBrush("ToolPanel.GroupBorder"))
+			.BorderImage(FAppStyle::GetBrush("ToolPanel.GroupBorder"))
 			[
 				SNew(SVerticalBox)
 				+ SVerticalBox::Slot()

@@ -73,7 +73,7 @@ TSharedRef<SWidget> FFaceFXAnimationKeyDetailsDialog::CreateWidget(UFaceFXCompon
 	AssetPickerConfig.OnAssetSelected = FOnAssetSelected::CreateRaw(this, &FFaceFXAnimationKeyDetailsDialog::OnAnimAssetSelected);
 	AssetPickerConfig.bAllowNullSelection = false;
 	AssetPickerConfig.InitialAssetViewType = EAssetViewType::List;
-	AssetPickerConfig.Filter.ClassNames.Add(UFaceFXAnim::StaticClass()->GetFName());
+	AssetPickerConfig.Filter.ClassPaths.Add(UFaceFXAnim::StaticClass()->GetClassPathName());
 
 	FContentBrowserModule& ContentBrowserModule = FModuleManager::Get().LoadModuleChecked<FContentBrowserModule>(TEXT("ContentBrowser"));
 
