@@ -943,7 +943,9 @@ bool UFaceFXCharacter::SetupMorphTargets(const UFaceFXActor* Dataset, const TArr
 		return true;
 	}
 
-	const int32 NumMorphTargets = SkelMeshComp->SkeletalMesh ? SkelMeshComp->SkeletalMesh->GetMorphTargetIndexMap().Num() : 0;
+	const USkeletalMesh* SkeletalMesh = SkelMeshComp->GetSkeletalMeshAsset();
+
+	const int32 NumMorphTargets = SkeletalMesh ? SkeletalMesh->GetMorphTargetIndexMap().Num() : 0;
 
 	if (NumMorphTargets == 0)
 	{
@@ -966,7 +968,7 @@ bool UFaceFXCharacter::SetupMorphTargets(const UFaceFXActor* Dataset, const TArr
 			continue;
 		}
 
-		if (SkelMeshComp->SkeletalMesh->GetMorphTargetIndexMap().Contains(AssetIdData->Name))
+		if (SkeletalMesh->GetMorphTargetIndexMap().Contains(AssetIdData->Name))
 		{
 			MorphTargetNames.Add(AssetIdData->Name);
 			MorphTargetIndices.Add((size_t)TrackIndex);

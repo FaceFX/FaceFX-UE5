@@ -92,7 +92,7 @@ void FAnimNode_BlendFaceFXAnimation::LoadFaceFXData(FAnimInstanceProxy* AnimInst
 				BlendMode = FaceFXChar->GetBlendMode();
 
 				const TArray<FName>& BoneNames = FaceFXChar->GetBoneNames();
-				const TArray<FTransform>& BoneRefPoses = Component->SkeletalMesh->GetRefSkeleton().GetRefBonePose();
+				const TArray<FTransform>& BoneRefPoses = Component->GetSkeletalMeshAsset()->GetRefSkeleton().GetRefBonePose();
 
 				for (const FName& BoneName : BoneNames)
 				{
@@ -124,7 +124,7 @@ void FAnimNode_BlendFaceFXAnimation::LoadFaceFXData(FAnimInstanceProxy* AnimInst
 						else
 						{
 							UE_LOG(LogFaceFX, Warning, TEXT("BlendFacialAnimation: Unable to find FaceFX bone within skeletal mesh. Bone: %s. SkelMesh: %s. Actor: %s"),
-								*BoneName.GetPlainNameString(), *GetNameSafe(Component->SkeletalMesh), *GetNameSafe(Component->GetOwner()));
+								*BoneName.GetPlainNameString(), *GetNameSafe(Component->GetSkeletalMeshAsset()), *GetNameSafe(Component->GetOwner()));
 						}
 					}
 					else

@@ -152,9 +152,12 @@ TSharedRef<SWidget> FFaceFXAnimationKeyDetailsDialog::CreateWidget(UFaceFXCompon
 			if (SkelMeshComp)
 			{
 				NewEntry->Text = SkelMeshComp->GetName();
-				if (SkelMeshComp->SkeletalMesh)
+
+				const USkeletalMesh* SkeletalMesh = SkelMeshComp->GetSkeletalMeshAsset();
+
+				if (SkeletalMesh)
 				{
-					NewEntry->Text += TEXT("  [Mesh: ") + SkelMeshComp->SkeletalMesh->GetName() + TEXT("]");
+					NewEntry->Text += TEXT("  [Mesh: ") + SkeletalMesh->GetName() + TEXT("]");
 				}
 			}
 			else
