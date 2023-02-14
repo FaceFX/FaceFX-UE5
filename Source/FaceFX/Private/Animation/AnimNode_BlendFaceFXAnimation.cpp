@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2022 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2023 OC3 Entertainment, Inc. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -92,7 +92,7 @@ void FAnimNode_BlendFaceFXAnimation::LoadFaceFXData(FAnimInstanceProxy* AnimInst
 				BlendMode = FaceFXChar->GetBlendMode();
 
 				const TArray<FName>& BoneNames = FaceFXChar->GetBoneNames();
-				const TArray<FTransform>& BoneRefPoses = Component->SkeletalMesh->GetRefSkeleton().GetRefBonePose();
+				const TArray<FTransform>& BoneRefPoses = Component->GetSkeletalMeshAsset()->GetRefSkeleton().GetRefBonePose();
 
 				for (const FName& BoneName : BoneNames)
 				{
@@ -124,7 +124,7 @@ void FAnimNode_BlendFaceFXAnimation::LoadFaceFXData(FAnimInstanceProxy* AnimInst
 						else
 						{
 							UE_LOG(LogFaceFX, Warning, TEXT("BlendFacialAnimation: Unable to find FaceFX bone within skeletal mesh. Bone: %s. SkelMesh: %s. Actor: %s"),
-								*BoneName.GetPlainNameString(), *GetNameSafe(Component->SkeletalMesh), *GetNameSafe(Component->GetOwner()));
+								*BoneName.GetPlainNameString(), *GetNameSafe(Component->GetSkeletalMeshAsset()), *GetNameSafe(Component->GetOwner()));
 						}
 					}
 					else

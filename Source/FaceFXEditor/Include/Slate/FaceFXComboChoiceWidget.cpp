@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2022 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2023 OC3 Entertainment, Inc. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -68,12 +68,12 @@ void FFaceFXComboChoiceWidget::Construct(const FArguments& Args)
 		Options.Add(MakeShareable(new FString(Option)));
 	}
 
-	FSlateFontInfo MessageFont( FEditorStyle::GetFontStyle(TEXT("StandardDialog.LargeFont")));
+	FSlateFontInfo MessageFont(FAppStyle::GetFontStyle(TEXT("StandardDialog.LargeFont")));
 
 	ChildSlot
 		[
 			SNew(SBorder)
-			.BorderImage(FEditorStyle::GetBrush("ToolPanel.GroupBorder"))
+			.BorderImage(FAppStyle::GetBrush("ToolPanel.GroupBorder"))
 			[
 				SNew(SVerticalBox)
 				+ SVerticalBox::Slot()

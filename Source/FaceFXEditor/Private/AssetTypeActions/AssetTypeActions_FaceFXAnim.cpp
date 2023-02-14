@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2022 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2023 OC3 Entertainment, Inc. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -108,7 +108,7 @@ void FAssetTypeActions_FaceFXAnim::ExecuteLink(TArray<TWeakObjectPtr<UObject>> O
 {
 	FOpenAssetDialogConfig OpenConfig;
 	OpenConfig.DialogTitleOverride = LOCTEXT("Asset_LinkFXAnimSelectTitle","Select Actor Asset To Link With");
-	OpenConfig.AssetClassNames.Add(UFaceFXActor::StaticClass()->GetFName());
+	OpenConfig.AssetClassNames.Add(UFaceFXActor::StaticClass()->GetClassPathName());
 	OpenConfig.bAllowMultipleSelection = true;
 
 	FContentBrowserModule& ContentBrowserModule = FModuleManager::LoadModuleChecked<FContentBrowserModule>("ContentBrowser");
@@ -119,7 +119,7 @@ void FAssetTypeActions_FaceFXAnim::ExecuteUnlink(TArray<TWeakObjectPtr<UObject>>
 {
 	FOpenAssetDialogConfig OpenConfig;
 	OpenConfig.DialogTitleOverride = LOCTEXT("Asset_UnlinkFXAnimSelectTitle","Select Actor Asset To Unlink From");
-	OpenConfig.AssetClassNames.Add(UFaceFXActor::StaticClass()->GetFName());
+	OpenConfig.AssetClassNames.Add(UFaceFXActor::StaticClass()->GetClassPathName());
 	OpenConfig.bAllowMultipleSelection = true;
 
 	FContentBrowserModule& ContentBrowserModule = FModuleManager::LoadModuleChecked<FContentBrowserModule>("ContentBrowser");

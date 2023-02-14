@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2022 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2023 OC3 Entertainment, Inc. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -943,7 +943,9 @@ bool UFaceFXCharacter::SetupMorphTargets(const UFaceFXActor* Dataset, const TArr
 		return true;
 	}
 
-	const int32 NumMorphTargets = SkelMeshComp->SkeletalMesh ? SkelMeshComp->SkeletalMesh->GetMorphTargetIndexMap().Num() : 0;
+	const USkeletalMesh* SkeletalMesh = SkelMeshComp->GetSkeletalMeshAsset();
+
+	const int32 NumMorphTargets = SkeletalMesh ? SkeletalMesh->GetMorphTargetIndexMap().Num() : 0;
 
 	if (NumMorphTargets == 0)
 	{
@@ -966,7 +968,7 @@ bool UFaceFXCharacter::SetupMorphTargets(const UFaceFXActor* Dataset, const TArr
 			continue;
 		}
 
-		if (SkelMeshComp->SkeletalMesh->GetMorphTargetIndexMap().Contains(AssetIdData->Name))
+		if (SkeletalMesh->GetMorphTargetIndexMap().Contains(AssetIdData->Name))
 		{
 			MorphTargetNames.Add(AssetIdData->Name);
 			MorphTargetIndices.Add((size_t)TrackIndex);

@@ -1,6 +1,6 @@
 /*******************************************************************************
 The MIT License (MIT)
-Copyright (c) 2015-2022 OC3 Entertainment, Inc. All rights reserved.
+Copyright (c) 2015-2023 OC3 Entertainment, Inc. All rights reserved.
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -73,7 +73,7 @@ TSharedRef<SWidget> FFaceFXAnimationKeyDetailsDialog::CreateWidget(UFaceFXCompon
 	AssetPickerConfig.OnAssetSelected = FOnAssetSelected::CreateRaw(this, &FFaceFXAnimationKeyDetailsDialog::OnAnimAssetSelected);
 	AssetPickerConfig.bAllowNullSelection = false;
 	AssetPickerConfig.InitialAssetViewType = EAssetViewType::List;
-	AssetPickerConfig.Filter.ClassNames.Add(UFaceFXAnim::StaticClass()->GetFName());
+	AssetPickerConfig.Filter.ClassPaths.Add(UFaceFXAnim::StaticClass()->GetClassPathName());
 
 	FContentBrowserModule& ContentBrowserModule = FModuleManager::Get().LoadModuleChecked<FContentBrowserModule>(TEXT("ContentBrowser"));
 
@@ -152,9 +152,12 @@ TSharedRef<SWidget> FFaceFXAnimationKeyDetailsDialog::CreateWidget(UFaceFXCompon
 			if (SkelMeshComp)
 			{
 				NewEntry->Text = SkelMeshComp->GetName();
-				if (SkelMeshComp->SkeletalMesh)
+
+				const USkeletalMesh* SkeletalMesh = SkelMeshComp->GetSkeletalMeshAsset();
+
+				if (SkeletalMesh)
 				{
-					NewEntry->Text += TEXT("  [Mesh: ") + SkelMeshComp->SkeletalMesh->GetName() + TEXT("]");
+					NewEntry->Text += TEXT("  [Mesh: ") + SkeletalMesh->GetName() + TEXT("]");
 				}
 			}
 			else

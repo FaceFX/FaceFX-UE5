@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2022 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2023 OC3 Entertainment, Inc. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -75,7 +75,7 @@ void FFaceFXAssetRefWidget::Construct(const FArguments& Args)
 			[
 				SNew(SImage)
 				.ColorAndOpacity(FSlateColor::UseForeground())
-				.Image(FEditorStyle::GetBrush(TEXT("PropertyWindow.Button_Browse")))
+				.Image(FAppStyle::GetBrush(TEXT("PropertyWindow.Button_Browse")))
 			]
 		]
 
@@ -122,7 +122,7 @@ void FFaceFXResultWidget::Construct(const FArguments& Args)
 		+SScrollBox::Slot()
 		[
 			SNew(SBorder)
-			.BorderImage( FEditorStyle::GetBrush("Menu.Background") )
+			.BorderImage(FAppStyle::GetBrush("Menu.Background"))
 			//.BorderBackgroundColor(FColor::White)
 			.Content()
 			[
