@@ -23,6 +23,7 @@
 #include "Animation/FaceFXComponent.h"
 #include "Animation/AnimInstanceProxy.h"
 #include "AnimationRuntime.h"
+#include "Engine/SkeletalMesh.h"
 
 DECLARE_CYCLE_STAT(TEXT("Blend FaceFX Animation"), STAT_FaceFXBlend, STATGROUP_FACEFX);
 DECLARE_CYCLE_STAT(TEXT("Blend FaceFX Animation - Load"), STAT_FaceFXBlendLoad, STATGROUP_FACEFX);

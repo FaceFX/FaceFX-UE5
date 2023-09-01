@@ -28,6 +28,7 @@
 #include "Animation/FaceFXComponent.h"
 #include "Engine/StreamableManager.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Materials/MaterialInterface.h"
 
 DECLARE_CYCLE_STAT(TEXT("Tick Character"), STAT_FaceFXTick, STATGROUP_FACEFX);
 DECLARE_CYCLE_STAT(TEXT("Update Transforms"), STAT_FaceFXUpdateTransforms, STATGROUP_FACEFX);

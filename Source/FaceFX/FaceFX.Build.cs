@@ -32,7 +32,7 @@ public class FaceFX : ModuleRules
     public FaceFX(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-        bEnforceIWYU = true;
+        IWYUSupport = IWYUSupport.Full;
 
         PublicDependencyModuleNames.Add("TimeManagement");
 
