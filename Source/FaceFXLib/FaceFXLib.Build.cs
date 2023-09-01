@@ -45,7 +45,7 @@ public class FaceFXLib : ModuleRules
         if (Target.Platform == UnrealTargetPlatform.Android)
         {
             if (Target.Architecture == UnrealArch.Arm64) {
-                PublicAdditionalLibraries.Add(FacFXDirLib + "/armeabi-v7a/" + FaceFXLib);
+                PublicAdditionalLibraries.Add(FaceFXDirLib + "/armeabi-v7a/" + FaceFXLib);
                 PublicAdditionalLibraries.Add(FaceFXDirLib + "/arm64-v8a/" + FaceFXLib);
             } else {
                 throw new BuildException(System.String.Format("FaceFX: unexpected Android plugin architecture"));
