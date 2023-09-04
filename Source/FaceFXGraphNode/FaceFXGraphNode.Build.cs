@@ -25,7 +25,7 @@ public class FaceFXGraphNode : ModuleRules
     public FaceFXGraphNode(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-        bEnforceIWYU = true;
+        IWYUSupport = IWYUSupport.Full;
 
         PrivateDependencyModuleNames.AddRange(
             new string[]
