@@ -331,7 +331,7 @@ FReply FFaceFXResultWidget::OnRollbackChanges()
 	const FText DialogTitle = LOCTEXT("ImportRollbackTitle", "Rollback Changes (Create only)");
 	const EAppReturnType::Type Result = FMessageDialog::Open(EAppMsgType::YesNo,
 		FText::Format(LOCTEXT("ImportRollbackImport", "Are you sure to rollback the changes on the {0} selected create actions ?"), FText::FromString(FString::FromInt(SelectedCreateEntries.Num()))),
-		&DialogTitle);
+		DialogTitle);
 
 	if (Result == EAppReturnType::Yes)
 	{
@@ -350,7 +350,7 @@ FReply FFaceFXResultWidget::OnRollbackChanges()
 			FText::Format(LOCTEXT("ImportRollbackImportResult", "{0} out of {1} actions successfully rolled back"),
 			FText::FromString(FString::FromInt(RollbackSuccessCount)),
 			FText::FromString(FString::FromInt(SelectedCreateEntries.Num()))),
-			&DialogTitle);
+			DialogTitle);
 	}
 
 	return FReply::Handled();

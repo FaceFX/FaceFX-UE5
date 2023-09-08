@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "5.2",
+	"VersionName": "5.3",
 	"FriendlyName": "FaceFX",
 	"Description": "Enables engine and editor support for facial animations powered by FaceFX.",
 	"Category": "FaceFX",
@@ -10,7 +10,7 @@
 	"DocsURL": "https://unreal.facefx.com/",
 	"MarketplaceURL": "",
 	"SupportURL": "",
-	"EngineVersion": "5.2.0",
+	"EngineVersion": "5.3.0",
 	"CanContainContent": false,
 	"Installed": true,
 	"Modules": [
