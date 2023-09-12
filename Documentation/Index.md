@@ -15,7 +15,7 @@ The FaceFX UE5 Plugin Documentation is organized into the following main section
 
 + [Sequencer](Sequencer.md) - Details the FaceFX integration with Sequencer.
 
-+ [Events](Events.md) - How to use events (new in version 2 of the FaceFX Runtime available in UE5.26)
++ [Events](Events.md) - How to use events (new in version 2 of the FaceFX Runtime available in UE4.26)
 
 + [Configuration](Configuration.md) - Details FaceFX UE5 Plugin configuration options.
 

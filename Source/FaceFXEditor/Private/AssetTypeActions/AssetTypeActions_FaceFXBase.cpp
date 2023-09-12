@@ -194,7 +194,7 @@ void FAssetTypeActions_FaceFXBase::ExecuteShowDetails(TArray<TWeakObjectPtr<UObj
 		FText Message = FText::FromString(Details);
 		FText Title = LOCTEXT("DetailsWindowTitle", "FaceFX Asset Details");
 
-		FMessageDialog::Open(EAppMsgType::Ok, Message, &Title);
+		FMessageDialog::Open(EAppMsgType::Ok, Message, Title);
 	}
 }
 

@@ -5,14 +5,14 @@ In-game actions can be triggered from animation events. Each animation can trigg
 
 Events are created from the Events tab in FaceFX Studio. While FaceFX Studio events can contain animation curves in addition to the event payload, all animation curves are baked into the parent animation by the compiler, leaving only the payload to be passed to an in-game system.
 
-Events were added in version 2 of the FaceFX Runtime, first integrated with UE5.26.
+Events were added in version 2 of the FaceFX Runtime, first integrated with UE4.26.
 
 Limits (Enforced by Compiler)
 -----------------------------
 
 + Maximum 4096 events per animation
 
-+ Maximum 7 concurrent events 
++ Maximum 7 concurrent events
 
 + Maximum size of all payload strings in an animation is 65536 bytes
 
@@ -26,7 +26,7 @@ Tutorial
 
 + Compile the animation using version 2 of the [FaceFX Runtime Compiler](RequirementsAndKeyConcepts.md).
 
-+ Create the OnAnimationEvent node in your character's blueprint by selecting the **FaceFX Component** and adding the **On Animation Event** from the **Events** section of the **Details** tab. 
++ Create the OnAnimationEvent node in your character's blueprint by selecting the **FaceFX Component** and adding the **On Animation Event** from the **Events** section of the **Details** tab.
 
 <img src="Images/OnAnimationEvent.png" width="242">
 
