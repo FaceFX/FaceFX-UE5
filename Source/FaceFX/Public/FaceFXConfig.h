@@ -24,7 +24,7 @@
 #include "Runtime/Launch/Resources/Version.h"
 
 #define FX_NO_1_6_API_COMPATIBILITY
-#include "FaceFXLib/facefx-runtime-2.1.0/facefx/facefx.h"
+#include "facefx/facefx.h"
 
 // Version check.
 #if defined(FFX_VERSION)

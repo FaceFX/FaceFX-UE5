@@ -26,8 +26,12 @@ public class FaceFXLib : ModuleRules
     //used to show warning only once.
     static bool DebugLibsWarningDisplayed = false;
 
-    //The folder in the FaceFX runtime is located in. You need to update this whenever you update your FaceFX runtime
-    public static string RuntimeFolder { get { return "facefx-runtime-2.1.0/facefx"; } }
+    //Update this when updating the FaceFX Runtime version you're using.
+    public static string RuntimeVersion { get { return "2.1.0"; } }
+
+    public static string RuntimeFolderBase { get { return "facefx-runtime-" + RuntimeVersion; } }
+
+    public static string RuntimeFolder { get { return RuntimeFolderBase + "/facefx"; } }
 
     public FaceFXLib(ReadOnlyTargetRules Target) : base(Target)
     {
@@ -35,6 +39,15 @@ public class FaceFXLib : ModuleRules
         IWYUSupport = IWYUSupport.None;
 
         Type = ModuleType.External;
+
+        string FaceFXBaseDir = Path.Combine(new []{ this.ModuleDirectory, RuntimeFolderBase });
+
+        if (!Directory.Exists(FaceFXBaseDir))
+        {
+            throw new BuildException(System.String.Format("FaceFX: cannot find the FaceFX Runtime directory '{0}'", FaceFXBaseDir));
+        }
+
+        PublicIncludePaths.Add(FaceFXBaseDir);
 
         string FaceFXLib;
         string FaceFXDir;
