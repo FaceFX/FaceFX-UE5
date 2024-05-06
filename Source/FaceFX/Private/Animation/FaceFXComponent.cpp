@@ -413,7 +413,8 @@ void UFaceFXComponent::AddReferencedObjects(UObject* InThis, FReferenceCollector
 
 	for (FFaceFXEntry& Entry : This->Entries)
 	{
-		Collector.AddReferencedObject(Entry.Character);
+		TObjectPtr<UFaceFXCharacter> Character = Entry.Character;
+		Collector.AddReferencedObject(Character);
 	}
 	Super::AddReferencedObjects(This, Collector);
 }
