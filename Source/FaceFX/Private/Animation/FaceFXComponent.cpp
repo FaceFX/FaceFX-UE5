@@ -22,6 +22,8 @@
 #include "FaceFX.h"
 #include "Engine/StreamableManager.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Animation/AnimInstance.h"
+#include "Animation/AnimClassInterface.h"
 
 UFaceFXComponent::UFaceFXComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), NumAsyncLoadRequestsPending(0)
 {
@@ -411,7 +413,8 @@ void UFaceFXComponent::AddReferencedObjects(UObject* InThis, FReferenceCollector
 
 	for (FFaceFXEntry& Entry : This->Entries)
 	{
-		Collector.AddReferencedObject(Entry.Character);
+		TObjectPtr<UFaceFXCharacter> Character = Entry.Character;
+		Collector.AddReferencedObject(Character);
 	}
 	Super::AddReferencedObjects(This, Collector);
 }

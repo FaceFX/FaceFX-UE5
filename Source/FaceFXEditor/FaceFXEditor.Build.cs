@@ -45,6 +45,7 @@ public class FaceFXEditor : ModuleRules
                 "AnimGraph",
                 "BlueprintGraph",
                 "Sequencer",
+                "SequencerCore",
                 "MovieScene",
                 "MovieSceneTools",
                 "TimeManagement",

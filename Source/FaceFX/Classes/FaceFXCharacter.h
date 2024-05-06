@@ -32,6 +32,7 @@ class UFaceFXActor;
 class UFaceFXComponent;
 class UFaceFXAsset;
 class AActor;
+class UActorComponent;
 
 /** Class that represents a FaceFX character instance */
 UCLASS()
