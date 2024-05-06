@@ -29,6 +29,7 @@ SOFTWARE.
 #include "IMovieScenePlayer.h"
 #include "MovieSceneCommonHelpers.h"
 #include "Animation/AnimInstance.h"
+#include "Components/SkeletalMeshComponent.h"
 
 /**
 * Gets the FaceFX component based on a given object

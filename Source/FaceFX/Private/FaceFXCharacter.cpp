@@ -27,6 +27,7 @@
 #include "GameFramework/Actor.h"
 #include "Animation/FaceFXComponent.h"
 #include "Engine/StreamableManager.h"
+#include "Engine/SkeletalMesh.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Materials/MaterialInterface.h"
 

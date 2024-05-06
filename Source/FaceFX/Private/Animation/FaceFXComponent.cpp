@@ -22,6 +22,8 @@
 #include "FaceFX.h"
 #include "Engine/StreamableManager.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Animation/AnimInstance.h"
+#include "Animation/AnimClassInterface.h"
 
 UFaceFXComponent::UFaceFXComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), NumAsyncLoadRequestsPending(0)
 {
