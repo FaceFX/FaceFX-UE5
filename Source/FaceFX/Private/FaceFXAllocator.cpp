@@ -19,7 +19,6 @@
 *******************************************************************************/
 
 #include "FaceFXAllocator.h"
-#include "FaceFX.h"
 
 FxAllocationCallbacks FFaceFXAllocator::CreateAllocator()
 {

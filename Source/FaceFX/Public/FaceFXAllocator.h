@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "FaceFX.h"
 #include "HAL/UnrealMemory.h"
 
 struct FFaceFXAllocator
