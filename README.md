@@ -26,7 +26,7 @@ Complete licensing information can be found in the [LICENSE.md](LICENSE.md) file
 Supported Unreal Engine 5 versions
 ----------------------------------
 
-The FaceFX UE5 plugin supports UE5 version 5.4. It will not work unmodified on earlier versions of UE5.
+The FaceFX UE5 plugin supports UE5 version 5.5. It will not work unmodified on earlier versions of UE5.
 
 Documentation
 -------------
@@ -45,13 +45,13 @@ The following steps describe how to install the FaceFX UE5 plugin:
 
 #### Pre-built binaries
 
-**Note**: The pre-built binaries distribution will only work with the version of UE5 that is installed from inside the Epic Games Launcher application (currently 5.4). If you are using the UE5 GitHub source code you need to follow the directions for building the plugin from source.
+**Note**: The pre-built binaries distribution will only work with the version of UE5 that is installed from inside the Epic Games Launcher application (currently 5.5). If you are using the UE5 GitHub source code you need to follow the directions for building the plugin from source.
 
 ##### Windows
 
 1. [Download](https://unreal.facefx.com) the pre-built binaries distribution.
 
-2. Unzip the pre-built binaries distribution into your **C:\Program Files\Epic Games\UE_5.4\Engine\Plugins\Runtime** directory. You should now have this directory: **C:\Program Files\Epic Games\UE_5.4\Engine\Plugins\Runtime\FaceFX**.
+2. Unzip the pre-built binaries distribution into your **C:\Program Files\Epic Games\UE_5.5\Engine\Plugins\Runtime** directory. You should now have this directory: **C:\Program Files\Epic Games\UE_5.5\Engine\Plugins\Runtime\FaceFX**.
 
 3. Run UE5 from the Epic Games Launcher.
 
@@ -59,7 +59,7 @@ The following steps describe how to install the FaceFX UE5 plugin:
 
 1. [Download](https://unreal.facefx.com) the pre-built binaries distribution.
 
-2. Unzip the pre-built binaries distribution into your **/Users/Shared/Epic Games/UE_5.4/Engine/Plugins/Runtime** directory. You should now have this directory: **/Users/Shared/Epic Games/UE_5.4/Engine/Plugins/Runtime/FaceFX**.
+2. Unzip the pre-built binaries distribution into your **/Users/Shared/Epic Games/UE_5.5/Engine/Plugins/Runtime** directory. You should now have this directory: **/Users/Shared/Epic Games/UE_5.5/Engine/Plugins/Runtime/FaceFX**.
 
 3. Run UE5 from the Epic Games Launcher.
 
