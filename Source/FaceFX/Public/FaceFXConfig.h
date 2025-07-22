@@ -28,18 +28,21 @@
 
 // Version check.
 #if defined(FFX_VERSION)
-    // Pre-v2 runtime or v2 runtime with v1.6 compatibility layer enabled.
-    #if FFX_VERSION < FFX_MAKE_VERSION(2,1,0)
-        #error "FaceFX Runtime version 2.1.0 or greater is required to compile this version of the FaceFX UE5 plugin."
-    #endif
+// Pre-v2 runtime or v2 runtime with v1.6 compatibility layer enabled.
+#if FFX_VERSION < FFX_MAKE_VERSION(2, 2, 0)
+#error                                                                         \
+    "FaceFX Runtime version 2.2.0 or greater is required to compile this version of the FaceFX UE5 plugin."
+#endif
 #elif defined(FX_VERSION)
-    // v2 runtime.
-    #if FX_VERSION < FX_MAKE_VERSION(2,1,0)
-        #error "FaceFX Runtime version 2.1.0 or greater is required to compile this version of the FaceFX UE5 plugin."
-    #endif
+// v2 runtime.
+#if FX_VERSION < FX_MAKE_VERSION(2, 2, 0)
+#error                                                                         \
+    "FaceFX Runtime version 2.2.0 or greater is required to compile this version of the FaceFX UE5 plugin."
+#endif
 #else
-    // Unknown runtime version.
-    #error "FaceFX Runtime version 2.1.0 or greater is required to compile this version of the FaceFX UE5 plugin."
+// Unknown runtime version.
+#error                                                                         \
+    "FaceFX Runtime version 2.2.0 or greater is required to compile this version of the FaceFX UE5 plugin."
 #endif
 
 #include "FaceFXConfig.generated.h"
@@ -107,42 +110,40 @@
 
 /** Blend mode for FaceFX runtime */
 UENUM()
-enum class EFaceFXBlendMode : uint8
-{
-    /** Overwrite global settings with replace mode. The modifier replaces the existing translation, rotation, or scale. */
-    Replace UMETA(DisplayName = "Replace Existing"),
+enum class EFaceFXBlendMode : uint8 {
+  /** Overwrite global settings with replace mode. The modifier replaces the
+     existing translation, rotation, or scale. */
+  Replace UMETA(DisplayName = "Replace Existing"),
 
-    /** Overwrite global settings with additive mode. The modifier adds to the existing translation, rotation, or scale. */
-    Additive UMETA(DisplayName = "Add to Existing")
+  /** Overwrite global settings with additive mode. The modifier adds to the
+     existing translation, rotation, or scale. */
+  Additive UMETA(DisplayName = "Add to Existing")
 };
 
-/** Settings for the game which are exposed to the project plugin config screen */
+/** Settings for the game which are exposed to the project plugin config screen
+ */
 UCLASS(config = Game, defaultconfig)
-class FACEFX_API UFaceFXConfig : public UObject
-{
-    GENERATED_BODY()
+class FACEFX_API UFaceFXConfig : public UObject {
+  GENERATED_BODY()
 
 public:
+  static const UFaceFXConfig &Get() {
+    const UFaceFXConfig *Instance = GetDefault<UFaceFXConfig>();
+    check(Instance);
+    return *Instance;
+  }
 
-    static const UFaceFXConfig& Get()
-    {
-        const UFaceFXConfig* Instance = GetDefault<UFaceFXConfig>();
-        check(Instance);
-        return *Instance;
-    }
-
-    inline EFaceFXBlendMode GetDefaultBlendMode() const
-    {
-        return DefaultBlendMode;
-    }
+  inline EFaceFXBlendMode GetDefaultBlendMode() const {
+    return DefaultBlendMode;
+  }
 
 private:
-
-    /*
-    Default blend mode for the FaceFX runtime evaluation.
-This setting determines if the runtime is using absolute (replace mode) or offset (additive mode) transforms
-Can be overridden directly via an FaceFXActor asset properties.
-    */
-    UPROPERTY(config, EditAnywhere, Category = FaceFX)
-    EFaceFXBlendMode DefaultBlendMode = EFaceFXBlendMode::Replace;
+  /*
+  Default blend mode for the FaceFX runtime evaluation.
+This setting determines if the runtime is using absolute (replace mode) or
+offset (additive mode) transforms Can be overridden directly via an FaceFXActor
+asset properties.
+  */
+  UPROPERTY(config, EditAnywhere, Category = FaceFX)
+  EFaceFXBlendMode DefaultBlendMode = EFaceFXBlendMode::Replace;
 };

@@ -12,7 +12,7 @@ The FaceFX UE5 plugin currently supports the Windows, Mac, Xbox One, PS4, Ninten
 Important Information
 ---------------------
 
-With the UE5 version 5.0 update, the FaceFX UE5 Plugin has been updated to the FaceFX Runtime v2.1. It is important that you use the FaceFX Runtime v2.1 (or newer) data compiler and FaceFX Studio plugin. If you are upgrading from a previous version of the FaceFX UE5 Plugin, please make sure that you fully update your tool chain to the FaceFX Runtime v2.1 (or newer) as well.
+With the UE5 version 5.0 update, the FaceFX UE5 Plugin has been updated to the FaceFX Runtime v2.2. It is important that you use the FaceFX Runtime v2.2 (or newer) data compiler and FaceFX Studio plugin. If you are upgrading from a previous version of the FaceFX UE5 Plugin, please make sure that you fully update your tool chain to the FaceFX Runtime v2.2 (or newer) as well.
 
 License
 -------
@@ -80,9 +80,9 @@ First, make sure you are familiar with the process of cloning Unreal Engine from
 
 5. Unzip the FaceFX Runtime distribution .zip file you downloaded in step 2.
 
-6. Inside the extracted folder from step 5 you should find a **facefx-runtime-2.1.0** directory.
+6. Inside the extracted folder from step 5 you should find a **facefx-runtime-2.2.0** directory.
 
-7. Copy the **facefx-runtime-2.1.0** directory into your **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib** directory. You should now have this directory: **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib/facefx-runtime-2.1.0**.
+7. Copy the **facefx-runtime-2.2.0** directory into your **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib** directory. You should now have this directory: **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib/facefx-runtime-2.2.0**.
 
 8. Run the **GenerateProjectFiles.bat** file located in your **UnrealEngine** directory.
 
@@ -102,9 +102,9 @@ First, make sure you are familiar with the process of cloning Unreal Engine from
 
 5. Unzip the FaceFX Runtime distribution .zip file you downloaded in step 2.
 
-6. Inside the extracted folder from step 5 you should find a **facefx-runtime-2.1.0** directory.
+6. Inside the extracted folder from step 5 you should find a **facefx-runtime-2.2.0** directory.
 
-7. Copy the **facefx-runtime-2.1.0** directory into your **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib** directory. You should now have this directory: **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib/facefx-runtime-2.1.0**.
+7. Copy the **facefx-runtime-2.2.0** directory into your **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib** directory. You should now have this directory: **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib/facefx-runtime-2.2.0**.
 
 8. Run the **GenerateProjectFiles.sh** or double-click the **GenerateProjectFiles.command** file located in your **UnrealEngine** directory.
 

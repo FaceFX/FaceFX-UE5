@@ -27,7 +27,7 @@ public class FaceFXLib : ModuleRules
     static bool DebugLibsWarningDisplayed = false;
 
     //Update this when updating the FaceFX Runtime version you're using.
-    public static string RuntimeVersion { get { return "2.1.0"; } }
+    public static string RuntimeVersion { get { return "2.2.0"; } }
 
     public static string RuntimeFolderBase { get { return "facefx-runtime-" + RuntimeVersion; } }
 
