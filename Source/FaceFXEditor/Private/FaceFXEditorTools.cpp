@@ -736,7 +736,7 @@ bool FFaceFXEditorTools::LoadFromCompilationFolder(UFaceFXActor* Asset, const FS
 		TArray<FFaceFXAudioMapEntry> AudioMapData;
 		if (LoadAudioMapData(Asset, Folder, AudioMapData, OutResultMessages))
 		{
-			for (const UFaceFXAnim* Animation : Asset->Animations)
+			for (UFaceFXAnim* Animation : Asset->Animations)
 			{
 				if (Animation && !IsAnimationExistInAudioMap(Animation, AudioMapData))
 				{

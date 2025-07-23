@@ -119,7 +119,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category=FaceFX, Meta=(IsAutoPlaySound=true, HidePin="Caller", DefaultToSelf="Caller"))
 	bool Setup(USkeletalMeshComponent* SkelMeshComp, 
                UActorComponent* AudioComponent,
-			   const UFaceFXActor* Asset,
+			   UFaceFXActor* Asset,
 			   UPARAM(DisplayName="Compensate For Force Front XAxis") bool IsCompensateForForceFrontXAxis, 
 			   UPARAM(DisplayName="Automatically Play Sound") bool IsAutoPlaySound,
 			   UPARAM(DisplayName="Disable Morph Targets") bool IsDisableMorphTargets, 

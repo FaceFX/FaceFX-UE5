@@ -240,7 +240,8 @@ AActor* UFaceFXAnimationSection::GetActor() const
 				if (FMovieScenePossessable* Possessable = MovieScene->FindPossessable(TrackGuid))
 				{
 					//fetch from possessable parent
-					auto BoundObjects = Sequence->LocateBoundObjects(Possessable->GetParent(), Track);
+					TArray<UObject*, TInlineAllocator<1>> BoundObjects;
+					Sequence->LocateBoundObjects(Possessable->GetParent(), Track, nullptr, BoundObjects);
 					return BoundObjects.Num() > 0 ? Cast<AActor>(BoundObjects[0]) : nullptr;
 				}
 				else if (FMovieSceneSpawnable* Spawnable = MovieScene->FindSpawnable(TrackGuid))

@@ -37,7 +37,7 @@ void UFaceFXComponent::OnRegister()
 	CreateAllCharacters();
 }
 
-bool UFaceFXComponent::Setup(USkeletalMeshComponent* SkelMeshComp, UActorComponent* AudioComponent, const UFaceFXActor* Asset, bool IsCompensateForForceFrontXAxsis, bool IsAutoPlaySound, bool IsDisableMorphTargets, bool IsDisableMaterialParameters, bool IsIgnoreEvents, const UObject* Caller)
+bool UFaceFXComponent::Setup(USkeletalMeshComponent* SkelMeshComp, UActorComponent* AudioComponent, UFaceFXActor* Asset, bool IsCompensateForForceFrontXAxsis, bool IsAutoPlaySound, bool IsDisableMorphTargets, bool IsDisableMaterialParameters, bool IsIgnoreEvents, const UObject* Caller)
 {
 	if (!SkelMeshComp)
 	{
