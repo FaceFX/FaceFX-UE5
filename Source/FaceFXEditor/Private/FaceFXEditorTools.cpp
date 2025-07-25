@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2024 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2025 OC3 Entertainment, Inc. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -736,7 +736,7 @@ bool FFaceFXEditorTools::LoadFromCompilationFolder(UFaceFXActor* Asset, const FS
 		TArray<FFaceFXAudioMapEntry> AudioMapData;
 		if (LoadAudioMapData(Asset, Folder, AudioMapData, OutResultMessages))
 		{
-			for (const UFaceFXAnim* Animation : Asset->Animations)
+			for (UFaceFXAnim* Animation : Asset->Animations)
 			{
 				if (Animation && !IsAnimationExistInAudioMap(Animation, AudioMapData))
 				{

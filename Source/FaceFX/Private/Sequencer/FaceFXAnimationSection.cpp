@@ -1,6 +1,6 @@
 /*******************************************************************************
 The MIT License (MIT)
-Copyright (c) 2015-2024 OC3 Entertainment, Inc. All rights reserved.
+Copyright (c) 2015-2025 OC3 Entertainment, Inc. All rights reserved.
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -240,7 +240,8 @@ AActor* UFaceFXAnimationSection::GetActor() const
 				if (FMovieScenePossessable* Possessable = MovieScene->FindPossessable(TrackGuid))
 				{
 					//fetch from possessable parent
-					auto BoundObjects = Sequence->LocateBoundObjects(Possessable->GetParent(), Track);
+					TArray<UObject*, TInlineAllocator<1>> BoundObjects;
+					Sequence->LocateBoundObjects(Possessable->GetParent(), Track, nullptr, BoundObjects);
 					return BoundObjects.Num() > 0 ? Cast<AActor>(BoundObjects[0]) : nullptr;
 				}
 				else if (FMovieSceneSpawnable* Spawnable = MovieScene->FindSpawnable(TrackGuid))

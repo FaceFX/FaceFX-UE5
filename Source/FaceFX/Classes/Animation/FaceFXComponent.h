@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2024 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2025 OC3 Entertainment, Inc. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -119,7 +119,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category=FaceFX, Meta=(IsAutoPlaySound=true, HidePin="Caller", DefaultToSelf="Caller"))
 	bool Setup(USkeletalMeshComponent* SkelMeshComp, 
                UActorComponent* AudioComponent,
-			   const UFaceFXActor* Asset,
+			   UFaceFXActor* Asset,
 			   UPARAM(DisplayName="Compensate For Force Front XAxis") bool IsCompensateForForceFrontXAxis, 
 			   UPARAM(DisplayName="Automatically Play Sound") bool IsAutoPlaySound,
 			   UPARAM(DisplayName="Disable Morph Targets") bool IsDisableMorphTargets, 
