@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2025 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2026 OC3 Entertainment, Inc. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -58,7 +58,7 @@ struct FACEFX_API FaceFX
 	* @returns The FaceFX handle if succeeded, else nullptr
 	*/
 	static FxAnimation LoadAnimation(const FFaceFXAnimData& AnimData);
-	
+
 	/**
 	* Gets the start and end time of a given animation
 	* @param pAnimation The animation to fetch the bounds for

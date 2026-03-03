@@ -1,6 +1,6 @@
 /*******************************************************************************
 The MIT License (MIT)
-Copyright (c) 2015-2025 OC3 Entertainment, Inc. All rights reserved.
+Copyright (c) 2015-2026 OC3 Entertainment, Inc. All rights reserved.
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -31,7 +31,7 @@ struct IFaceFXAudio
 {
 	virtual ~IFaceFXAudio(){}
 
-	/** 
+	/**
 	* Ticks the player
 	* @param DeltaTime The time passed since the last tick
 	*/
@@ -91,12 +91,12 @@ struct IFaceFXAudio
 	* Sets the audio component for the player
 	* @param Component The new audio component
 	*/
-	virtual bool SetAudioComponent(UActorComponent* Component) 
-	{ 
-		return true; 
+	virtual bool SetAudioComponent(UActorComponent* Component)
+	{
+		return true;
 	}
 
-	/** 
+	/**
 	* Gets the location at which we are right now on the audio playback (in seconds)
 	* @returns The location in seconds
 	*/
@@ -159,8 +159,8 @@ struct IFaceFXAudio
 		return PlaybackState == EPlaybackState::Stopped;
 	}
 
-	/** 
-	* Gets the owning component of this audio player 
+	/**
+	* Gets the owning component of this audio player
 	* @returns The owning component or nullptr
 	*/
 	UFaceFXCharacter* GetOwner() const
@@ -193,14 +193,14 @@ protected:
 
 /** Main audio layer */
 struct FFaceFXAudio
-{	
-	/** 
-	* Creates the audio system to be used 
+{
+	/**
+	* Creates the audio system to be used
 	* @param Owner The owning character component to create the player for
 	*/
 	static TSharedPtr<IFaceFXAudio> Create(UFaceFXCharacter* Owner);
 
-	/** 
+	/**
 	* Gets the indicator if the active audio system is using sound wave assets
 	* @returns True if sound wave assets are used, else false
 	*/

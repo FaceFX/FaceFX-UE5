@@ -1,6 +1,6 @@
 /*******************************************************************************
 The MIT License (MIT)
-Copyright (c) 2015-2025 OC3 Entertainment, Inc. All rights reserved.
+Copyright (c) 2015-2026 OC3 Entertainment, Inc. All rights reserved.
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -114,7 +114,7 @@ struct FFaceFXAnimationSectionData
 /** Execution token for Sequencer FaceFX animation section playback */
 struct FFaceFXAnimationExecutionToken : public IMovieSceneSharedExecutionToken
 {
-	FFaceFXAnimationExecutionToken(const FFaceFXAnimationSectionData& InSectionData = FFaceFXAnimationSectionData(), const FMovieSceneEvaluationOperand& InOperand = FMovieSceneEvaluationOperand(), 
+	FFaceFXAnimationExecutionToken(const FFaceFXAnimationSectionData& InSectionData = FFaceFXAnimationSectionData(), const FMovieSceneEvaluationOperand& InOperand = FMovieSceneEvaluationOperand(),
 		const FMovieSceneContext& InContext = FMovieSceneContext(FMovieSceneEvaluationRange(0, FFrameRate()))) : SectionData(InSectionData), Operand(InOperand), Context(InContext) {}
 
 	virtual void Execute(FPersistentEvaluationData& PersistentData, IMovieScenePlayer& Player) override;
