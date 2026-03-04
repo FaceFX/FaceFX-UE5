@@ -1,6 +1,6 @@
 /*******************************************************************************
 The MIT License (MIT)
-Copyright (c) 2015-2025 OC3 Entertainment, Inc. All rights reserved.
+Copyright (c) 2015-2026 OC3 Entertainment, Inc. All rights reserved.
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -43,7 +43,7 @@ struct FFaceFXAudioDefault : public IFaceFXAudio
 	* @returns True if audio playback successfully started on the owning actors Audio component, else false
 	*/
 	virtual bool Play(float Position = 0.F, UActorComponent** OutAudioComp = nullptr) override;
-	
+
 	/**
 	* Pausing the playback of the currently playing audio
 	* @param fadeOut Indicator if the playback shall fade out quickly instead of stopping

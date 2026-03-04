@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2025 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2026 OC3 Entertainment, Inc. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -40,9 +40,9 @@ struct FACEFX_API FFaceFXEntry
 	GENERATED_USTRUCT_BODY()
 
 	FFaceFXEntry() : SkelMeshComp(nullptr), AudioComp(nullptr), Character(nullptr), bIsCompensateForForceFrontXAxis(false), bIsAutoPlaySound(true), bIsDisableMorphTargets(false), bIsDisableMaterialParameters(false), bIsIgnoreEvents(false) {}
-	FFaceFXEntry(USkeletalMeshComponent* InSkelMeshComp, UActorComponent* InAudioComp, const TSoftObjectPtr<class UFaceFXActor>& InAsset, bool InIsCompensateForForceFrontXAxis = false, bool InIsAutoPlaySound = true, 
+	FFaceFXEntry(USkeletalMeshComponent* InSkelMeshComp, UActorComponent* InAudioComp, const TSoftObjectPtr<class UFaceFXActor>& InAsset, bool InIsCompensateForForceFrontXAxis = false, bool InIsAutoPlaySound = true,
 		bool InIsDisableMorphTargets = false, bool InbIsDisableMaterialParameters = false, bool InIsIgnoreEvents = false) :
-		SkelMeshComp(InSkelMeshComp), AudioComp(InAudioComp), Asset(InAsset), Character(nullptr), bIsCompensateForForceFrontXAxis(InIsCompensateForForceFrontXAxis), bIsAutoPlaySound(InIsAutoPlaySound), 
+		SkelMeshComp(InSkelMeshComp), AudioComp(InAudioComp), Asset(InAsset), Character(nullptr), bIsCompensateForForceFrontXAxis(InIsCompensateForForceFrontXAxis), bIsAutoPlaySound(InIsAutoPlaySound),
 		bIsDisableMorphTargets(InIsDisableMorphTargets), bIsDisableMaterialParameters(InbIsDisableMaterialParameters), bIsIgnoreEvents(InIsIgnoreEvents){}
 
 	/** The linked skelmesh component */
@@ -76,7 +76,7 @@ struct FACEFX_API FFaceFXEntry
 	/** Indicates or not FaceFX tracks will animate matched material parameters.. */
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = FaceFX, DisplayName="Disable Material Parameters")
 	uint8 bIsDisableMaterialParameters : 1;
- 
+
 	/** Indicates whether or not FaceFX events are ignored. */
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = FaceFX, DisplayName="Ignore Events")
 	uint8 bIsIgnoreEvents : 1;
@@ -117,14 +117,14 @@ public:
 	* @return True if succeeded, else false
 	*/
 	UFUNCTION(BlueprintCallable, Category=FaceFX, Meta=(IsAutoPlaySound=true, HidePin="Caller", DefaultToSelf="Caller"))
-	bool Setup(USkeletalMeshComponent* SkelMeshComp, 
+	bool Setup(USkeletalMeshComponent* SkelMeshComp,
                UActorComponent* AudioComponent,
 			   UFaceFXActor* Asset,
-			   UPARAM(DisplayName="Compensate For Force Front XAxis") bool IsCompensateForForceFrontXAxis, 
+			   UPARAM(DisplayName="Compensate For Force Front XAxis") bool IsCompensateForForceFrontXAxis,
 			   UPARAM(DisplayName="Automatically Play Sound") bool IsAutoPlaySound,
-			   UPARAM(DisplayName="Disable Morph Targets") bool IsDisableMorphTargets, 
-			   UPARAM(DisplayName="Disable Material Parameters") bool IsDisableMaterialParameters, 
-			   UPARAM(DisplayName="Ignore Events") bool IsIgnoreEvents, 
+			   UPARAM(DisplayName="Disable Morph Targets") bool IsDisableMorphTargets,
+			   UPARAM(DisplayName="Disable Material Parameters") bool IsDisableMaterialParameters,
+			   UPARAM(DisplayName="Ignore Events") bool IsIgnoreEvents,
 			   const UObject* Caller = nullptr);
 
 	/**

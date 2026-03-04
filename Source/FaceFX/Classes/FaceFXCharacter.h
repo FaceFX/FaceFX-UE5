@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2025 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2026 OC3 Entertainment, Inc. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -296,8 +296,8 @@ public:
 	*/
 	void SetAudioComponent(UActorComponent* Component);
 
-	/** 
-	* Gets the audio player associated with this character 
+	/**
+	* Gets the audio player associated with this character
 	* @returns The audio player
 	*/
 	inline IFaceFXAudio* GetAudioPlayer() const
@@ -480,7 +480,7 @@ private:
 	* @returns True if setup succeeded, else false
 	*/
 	bool SetupMorphTargets(const UFaceFXActor* Dataset, const TArray<uint64_t>& TrackIds);
-	
+
 	/** Processes the morph targets for the current frame state */
 	void ProcessMorphTargets();
 
