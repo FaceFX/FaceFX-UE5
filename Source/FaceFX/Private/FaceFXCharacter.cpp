@@ -833,6 +833,18 @@ bool UFaceFXCharacter::Load(const UFaceFXActor* Dataset, bool IsCompensateForFor
 		return false;
 	}
 
+	for (const uint64_t& TrackIdHash : TrackIds)
+	{
+		if (const FFaceFXIdData* TrackId = ActorData.Ids.FindByKey(TrackIdHash))
+		{
+			TrackNames.Add(TrackId->Name);
+		}
+		else
+		{
+			UE_LOG(LogFaceFX, Warning, TEXT("UFaceFXCharacter::Load. Unknown track id. %i. Asset: %s"), TrackIdHash, *GetNameSafe(FaceFXActor));
+		}
+	}
+
 	Result = fxFrameStateCreate(Actor, &FrameState, &Allocator);
 
 	if (!FX_SUCCEEDED(Result))
@@ -1223,7 +1235,7 @@ void UFaceFXCharacter::UpdateTransforms()
 		{
 			const FxBoneTransform& XForm = FaceFXBoneTransforms[i];
 
-			// Revert rotaiton.z and translation.y to convert from FaceFX to UE5 coordinates.
+			// Revert rotation.z and translation.y to convert from FaceFX to UE5 coordinates.
 			BoneTransforms[i].SetComponents(
 				FQuat(XForm.rotation.x, -XForm.rotation.y, XForm.rotation.z, XForm.rotation.w),
 				FVector(XForm.translation.x, -XForm.translation.y, XForm.translation.z),

@@ -65,6 +65,7 @@ void FAnimNode_BlendFaceFXAnimation::LoadFaceFXData(FAnimInstanceProxy* AnimInst
 	SCOPE_CYCLE_COUNTER(STAT_FaceFXBlendLoad);
 
 	BoneIndices.Empty();
+	CurveTrackIndices.Empty();
 
 	if (!AnimInstanceProxy)
 	{
@@ -91,6 +92,18 @@ void FAnimNode_BlendFaceFXAnimation::LoadFaceFXData(FAnimInstanceProxy* AnimInst
 		{
 			if (UFaceFXCharacter* FaceFXChar = FaceFXComp->GetCharacter(Component))
 			{
+				const TArray<FName>& TrackNames = FaceFXChar->GetTrackNames();
+
+				for (int32 i = 0; i < TrackNames.Num(); ++i)
+				{
+					const FName& TrackName = TrackNames[i];
+
+					if (TrackName.ToString().Contains(TEXT("CTRL_expressions_")))
+					{
+						CurveTrackIndices.Add(FCtrlCurveEntry(TrackName, i));
+					}
+				}
+
 				BlendMode = FaceFXChar->GetBlendMode();
 
 				const TArray<FName>& BoneNames = FaceFXChar->GetBoneNames();
@@ -239,6 +252,18 @@ void FAnimNode_BlendFaceFXAnimation::EvaluateComponentSpace_AnyThread(FComponent
 		{
 			if (UFaceFXCharacter* FaceFXChar = FaceFXComp->GetCharacter(Component))
 			{
+				const TArray<float>& FaceFXTrackValues = FaceFXChar->GetTrackValues();
+
+				// TODO(jcr): there is a more efficient way to do this as a bulk update -- Set() is doing a binary search each time
+				for (const FCtrlCurveEntry& Entry : CurveTrackIndices)
+				{
+					// TODO(jcr): this is for the additive blend mode only?
+					float CurrentValue = Output.Curve.Get(Entry.CurveName);
+					float NewValue = CurrentValue + FaceFXTrackValues[Entry.TrackIndex];
+
+					Output.Curve.Set(Entry.CurveName, NewValue);
+				}
+
 				const TArray<FTransform>& FaceFXBoneTransforms = FaceFXChar->GetBoneTransforms();
 
 				for (const FBlendFacialAnimationEntry& Entry : BoneIndices)

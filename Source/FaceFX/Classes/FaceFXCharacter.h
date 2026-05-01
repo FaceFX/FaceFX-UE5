@@ -320,6 +320,24 @@ public:
 	}
 
 	/**
+	* Gets the list of track names
+	* @returns The list of track names
+	*/
+	inline const TArray<FName>& GetTrackNames() const
+	{
+		return TrackNames;
+	}
+
+	/**
+	* Receives the current track values
+	* @returns The current track values
+	*/
+	inline const TArray<float>& GetTrackValues()
+	{
+		return TrackValues;
+	}
+
+	/**
 	* Gets the index within the transforms for a given bone name
 	* @param Name The bone name to look for
 	* @returns The transforms index, INDEX_NONE if not found
@@ -558,6 +576,9 @@ private:
 
 	/** The FaceFX track values */
 	TArray<float> TrackValues;
+
+	/** The list of track names defined within the FaceFX data used by this character */
+	TArray<FName> TrackNames;
 
 	/** The overall time progression */
 	float CurrentTime;

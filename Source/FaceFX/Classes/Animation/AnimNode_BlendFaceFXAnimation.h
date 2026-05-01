@@ -85,6 +85,20 @@ private:
 	/** The bone indices where to copy the transforms into. Based on the bone names coming from the facefx character instance */
 	TArray<FBlendFacialAnimationEntry> BoneIndices;
 
+	/** struct that holds a CTRL_expressions_ curve name / FaceFX track index mapping */
+	struct FCtrlCurveEntry
+	{
+		FCtrlCurveEntry(FName InCurveName, int32 InTrackIndex) : CurveName(InCurveName), TrackIndex(InTrackIndex)
+		{
+		}
+
+		FName CurveName;
+		int32 TrackIndex;
+	};
+
+	/** The CTRL_expressions_ curve FaceFX track indices */
+	TArray<FCtrlCurveEntry> CurveTrackIndices;
+
 	/**
 	* Try to load the FaceFX character data
 	* @param AnimInstance The anim graph instance to use
