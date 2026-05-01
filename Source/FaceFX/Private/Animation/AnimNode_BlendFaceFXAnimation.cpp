@@ -257,9 +257,10 @@ void FAnimNode_BlendFaceFXAnimation::EvaluateComponentSpace_AnyThread(FComponent
 				// TODO(jcr): there is a more efficient way to do this as a bulk update -- Set() is doing a binary search each time
 				for (const FCtrlCurveEntry& Entry : CurveTrackIndices)
 				{
-					// TODO(jcr): this is for the additive blend mode only?
 					float CurrentValue = Output.Curve.Get(Entry.CurveName);
-					float NewValue = CurrentValue + FaceFXTrackValues[Entry.TrackIndex];
+					float FaceFXValue = FaceFXTrackValues[Entry.TrackIndex];
+
+					float NewValue = (1.f - BlendWeight) * CurrentValue + BlendWeight * FaceFXValue;
 
 					Output.Curve.Set(Entry.CurveName, NewValue);
 				}
