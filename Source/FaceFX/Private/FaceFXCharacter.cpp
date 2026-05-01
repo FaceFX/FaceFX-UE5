@@ -819,7 +819,7 @@ bool UFaceFXCharacter::Load(const UFaceFXActor* Dataset, bool IsCompensateForFor
 		return false;
 	}
 
-	TrackValues.AddUninitialized(TrackCount);
+	TrackValues.AddZeroed(TrackCount);
 
 	TArray<uint64_t> TrackIds;
 	TrackIds.AddUninitialized(TrackCount);
