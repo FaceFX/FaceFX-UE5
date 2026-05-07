@@ -90,7 +90,7 @@ public:
 
 #if FACEFX_USEANIMATIONLINKAGE
 	/**
-	* Starts the playback of the given facial animation
+	* Starts the playback of the given FaceFX animation
 	* @param AnimName The animation to play
 	* @param AnimGroup The animation group to find the animation in
 	* @param Loop True for when the animation shall loop, else false
@@ -102,7 +102,7 @@ public:
 	}
 
 	/**
-	* Starts the playback of the given facial animation
+	* Starts the playback of the given FaceFX animation
 	* @param AnimId The animation to play
 	* @param Loop True for when the animation shall loop, else false
 	* @returns True if succeeded, else false
@@ -112,7 +112,7 @@ public:
 #endif //FACEFX_USEANIMATIONLINKAGE
 
 	/**
-	* Starts the playback of the given facial animation asset
+	* Starts the playback of the given FaceFX animation asset
 	* @param Animation The animation to play
 	* @param Loop True for when the animation shall loop, else false
 	* @returns True if succeeded, else false
@@ -120,20 +120,20 @@ public:
 	bool Play(const UFaceFXAnim* Animation, bool Loop = false);
 
 	/**
-	* Resumes the playback of the facial animation
+	* Resumes the playback of the FaceFX animation
 	* @returns True if succeeded, else false
 	*/
 	bool Resume();
 
 	/**
-	* Pauses the playback of the facial animation
+	* Pauses the playback of the FaceFX animation
 	* @param fadeOut Indicator if the audio playback shall fade out quickly instead of stopping
 	* @returns True if succeeded, else false
 	*/
 	bool Pause(bool fadeOut = false);
 
 	/**
-	* Stops the playback of this facial animation
+	* Stops the playback of this FaceFX animation
 	* @param enforceStop Indicator if the stop is enforced no matter of current state
 	* @returns True if succeeded, else false
 	*/
@@ -149,7 +149,7 @@ public:
 	}
 
 	/**
-	* Jumps to a given position within the facial animation playback
+	* Jumps to a given position within the FaceFX animation playback
 	* @param Position The target position to jump to (in seconds). Ranges from 0 to animation duration
 	* @returns True if succeeded, else false
 	*/
@@ -161,12 +161,10 @@ public:
 	/**
 	* Loads the character data from the given data set
 	* @param Dataset The data set to load from
-	* @param IsCompensateForForceFrontXAxis Indicator that compensates for the Force Front XAxis setting when importing FBX files
-	* @param IsDisabledMorphTargets Indicator if the use of available morph targets shall be disabled
-	* @param IsDisableMaterialParameters Indicator if the use of material parameters shall be disabled
+	* @param CompensateForForceFrontXAxis Indicator that compensates for the Force Front XAxis setting when importing FBX files
 	* @returns True if succeeded, else false
 	*/
-	bool Load(const UFaceFXActor* Dataset, bool IsCompensateForForceFrontXAxis, bool IsDisabledMorphTargets, bool IsDisableMaterialParameters);
+	bool Load(const UFaceFXActor* Dataset, bool CompensateForForceFrontXAxis);
 
 	/**
 	* Gets the indicator if this character have been loaded
@@ -178,7 +176,7 @@ public:
 	}
 
 	/**
-	* Gets the indicator if the character has the given facial animation active right now (playing or not)
+	* Gets the indicator if the character has the given FaceFX animation active right now (playing or not)
 	* @param AnimId The animation ID we check for
 	* @returns True if the given animation is active, else false
 	*/
@@ -190,7 +188,7 @@ public:
 	}
 
 	/**
-	* Gets the indicator if the character is playing a facial animation right now
+	* Gets the indicator if the character is playing a FaceFX animation right now
 	* @returns True if playing, else false
 	*/
 	inline bool IsPlaying() const
@@ -199,7 +197,7 @@ public:
 	}
 
 	/**
-	* Gets the indicator if the character is playing the given facial animation right now
+	* Gets the indicator if the character is playing the given FaceFX animation right now
 	* @param AnimId The animation ID we check for playback
 	* @returns True if playing the given animation, else false
 	*/
@@ -209,14 +207,14 @@ public:
 	}
 
 	/**
-	* Gets the indicator if the character is playing the given facial animation right now
+	* Gets the indicator if the character is playing the given FaceFX animation right now
 	* @param Animation The animation we check for playback
 	* @returns True if playing the given animation, else false
 	*/
 	bool IsPlaying(const UFaceFXAnim* Animation) const;
 
 	/**
-	* Gets the indicator if the character is playing a facial animation right now or if one is paused
+	* Gets the indicator if the character is playing a FaceFX animation right now or if one is paused
 	* @returns True if playing, else false
 	*/
 	inline bool IsPlayingOrPaused() const
@@ -242,8 +240,8 @@ public:
 	bool IsPlayingOrPaused(const UFaceFXAnim* Animation) const;
 
 	/**
-	* Gets the indicator if this character is currently pausing a facial animation
-	* @returns True If the character is having a paused facial animation, else false
+	* Gets the indicator if this character is currently pausing a FaceFX animation
+	* @returns True If the character is having a paused FaceFX animation, else false
 	*/
 	inline bool IsPaused() const
 	{
@@ -468,7 +466,7 @@ private:
 	bool GetAnimationBounds(float& OutStart, float& OutEnd) const;
 
 	/**
-	* Updates the facial animation
+	* Updates the FaceFX animation
 	* @param DeltaTime The time passed since the last update
 	* @returns True if succeeded, else false
 	*/
@@ -490,46 +488,6 @@ private:
 	* @returns True if succeeded with ticking until the duration, else false
 	*/
 	bool TickUntil(float Duration, bool& OutAudioStarted, bool IgnoreEvents = true);
-
-	/**
-	* Retrieves the morph targets for a skel mesh and creates FaceFX indices for the names
-	* @param Dataset The asset to fetch the ids from
-	* @param TrackIds The FaceFX track ids
-	* @returns True if setup succeeded, else false
-	*/
-	bool SetupMorphTargets(const UFaceFXActor* Dataset, const TArray<uint64_t>& TrackIds);
-
-	/** Processes the morph targets for the current frame state */
-	void ProcessMorphTargets();
-
-	/** Resets the current morph target data */
-	inline void ResetMorphTargets()
-	{
-		MorphTargetNames.Empty();
-		MorphTargetIndices.Empty();
-	}
-
-	/**
-	* Retrieves the material parameters for skel mesh materials and creates FaceFX indices for the names
-	* @param Dataset The asset to fetch the ids from
-	* @param TrackIds The FaceFX track ids
-	* @param IgnoredTracks The list of tracks to ignore
-	* @returns True if setup succeeded, else false
-	*/
-	bool SetupMaterialParameters(const UFaceFXActor* Dataset, const TArray<uint64_t>& TrackIds, const TArray<FName>& IgnoredTracks);
-
-	/** Processes the material parameters for the current frame state */
-	void ProcessMaterialParameters();
-
-	/** Resets the current material parameter data */
-	inline void ResetMaterialParameters()
-	{
-		MaterialParameterNames.Empty();
-		MaterialParameterIndices.Empty();
-	}
-
-	/** Sets the material parameters of the owners skel mesh to their defaults */
-	void ResetMaterialParametersToDefaults();
 
 	/** The data set from where this character was loaded from */
 	UPROPERTY(Transient)
@@ -561,18 +519,6 @@ private:
 
 	/** The bone ids coming from the facefx asset */
 	TArray<uint64_t> BoneIds;
-
-	/** The list of morph target names retrieved from the skel mesh during asset loading. The indices match the morph target track values: MorphTargetTrackValues */
-	TArray<FName> MorphTargetNames;
-
-	/** The indexes of the morph targets in the FaceFX track values array */
-	TArray<size_t> MorphTargetIndices;
-
-	/** The list of material parameter names retrieved from the skel mesh during asset loading. The indices match the material parameter track values: MaterialParameterTrackValues */
-	TArray<FName> MaterialParameterNames;
-
-	/** The indexes of the material parameters in the FaceFX track values array */
-	TArray<size_t> MaterialParameterIndices;
 
 	/** The FaceFX track values */
 	TArray<float> TrackValues;

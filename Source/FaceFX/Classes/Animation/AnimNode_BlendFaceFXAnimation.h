@@ -29,7 +29,7 @@
 struct FAnimInstanceProxy;
 enum class EFaceFXBlendMode : uint8;
 
-/** Anim graph node that blends in facial animation bone transforms into the pose */
+/** Anim graph node that blends in FaceFX animation into the pose */
 USTRUCT(BlueprintType)
 struct FACEFX_API FAnimNode_BlendFaceFXAnimation : public FAnimNode_Base
 {
@@ -41,8 +41,8 @@ struct FACEFX_API FAnimNode_BlendFaceFXAnimation : public FAnimNode_Base
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Links)
 	FComponentSpacePoseLink ComponentPose;
 
-	/** The strength of blending in the facial animation. Will be capped to .0F to 1.F */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=BlendMode, meta=(PinShownByDefault, UIMin=0.F, UIMax=1.F))
+	/** The strength of blending in the FaceFX animation. Will be clamped between 0.f and 1.f. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=BlendMode, meta=(PinShownByDefault, UIMin=0.f, UIMax=1.f))
 	float Alpha;
 
 	/** Indicator if stripped name space bone mapping shall be skipped during bone matching phase in case a bone name was not found */
@@ -66,9 +66,11 @@ struct FACEFX_API FAnimNode_BlendFaceFXAnimation : public FAnimNode_Base
 private:
 
 	/** struct that holds a transform / boneidx mapping */
-	struct FBlendFacialAnimationEntry
+	struct FFaceFXBoneTransformMappingEntry
 	{
-		FBlendFacialAnimationEntry(int32 InBoneIdx, int32 InTransformIdx, const FTransform& InBoneRefPose) : BoneIdx(InBoneIdx), TransformIdx(InTransformIdx)
+		FFaceFXBoneTransformMappingEntry(int32 InBoneIdx, int32 InTransformIdx, const FTransform& InBoneRefPose)
+			: BoneIdx(InBoneIdx)
+			, TransformIdx(InTransformIdx)
 		{
 			BoneRefPoseScale = InBoneRefPose.GetScale3D();
 			BoneRefPoseTranslation = InBoneRefPose.GetTranslation();
@@ -82,22 +84,13 @@ private:
 		FQuat BoneRefPoseRotationInv;
 	};
 
-	/** The bone indices where to copy the transforms into. Based on the bone names coming from the facefx character instance */
-	TArray<FBlendFacialAnimationEntry> BoneIndices;
+	/** The bone indices where to copy the transforms into. Based on the bone names coming from the FaceFX character instance. */
+	TArray<FFaceFXBoneTransformMappingEntry> FaceFXBoneTransformMap;
 
-	/** struct that holds a CTRL_expressions_ curve name / FaceFX track index mapping */
-	struct FCtrlCurveEntry
-	{
-		FCtrlCurveEntry(FName InCurveName, int32 InTrackIndex) : CurveName(InCurveName), TrackIndex(InTrackIndex)
-		{
-		}
-
-		FName CurveName;
-		int32 TrackIndex;
-	};
-
-	/** The CTRL_expressions_ curve FaceFX track indices */
-	TArray<FCtrlCurveEntry> CurveTrackIndices;
+	/** The FaceFX curves. These are in the same order as TrackValues from the FaceFX character. */
+	UE::Anim::TNamedValueArray<FDefaultAllocator, UE::Anim::FNamedIndexElement> FaceFXCurves;
+	/** The current values of the FaceFX curves in the incoming pose (what we will be lerping with). */
+	TArray<float> CurrentFaceFXCurveValues;
 
 	/**
 	* Try to load the FaceFX character data

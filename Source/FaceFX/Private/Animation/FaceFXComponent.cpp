@@ -37,6 +37,38 @@ void UFaceFXComponent::OnRegister()
 	CreateAllCharacters();
 }
 
+bool UFaceFXComponent::SetupFaceFXComponent(USkeletalMeshComponent* SkelMeshComp, UActorComponent* AudioComponent, UFaceFXActor* Asset, bool CompensateForForceFrontXAxsis, bool AutoPlaySound, bool IgnoreEvents, const UObject* Caller)
+{
+	if (!SkelMeshComp)
+	{
+		UE_LOG(LogFaceFX, Error, TEXT("UFaceFXComponent::Setup. Missing SkelMeshComp argument. Caller: %s"), *GetNameSafe(Caller));
+		return false;
+	}
+
+	if (!Asset)
+	{
+		UE_LOG(LogFaceFX, Error, TEXT("UFaceFXComponent::Setup. Missing Asset argument. Caller: %s"), *GetNameSafe(Caller));
+		return false;
+	}
+
+	int32 Idx = Entries.IndexOfByKey(SkelMeshComp);
+	if (Idx == INDEX_NONE)
+	{
+		//add new entry
+		Idx = Entries.Add(FFaceFXEntry(SkelMeshComp, AudioComponent, Asset, CompensateForForceFrontXAxsis, AutoPlaySound, IgnoreEvents));
+	}
+	checkf(Idx != INDEX_NONE, TEXT("Internal Error: Unable to add new FaceFX entry."));
+
+	if (IsRegistered())
+	{
+		//setup at runtime -> create character right now
+		CreateCharacter(Entries[Idx]);
+	}
+
+	return true;
+}
+
+// DEPRECATED
 bool UFaceFXComponent::Setup(USkeletalMeshComponent* SkelMeshComp, UActorComponent* AudioComponent, UFaceFXActor* Asset, bool IsCompensateForForceFrontXAxsis, bool IsAutoPlaySound, bool IsDisableMorphTargets, bool IsDisableMaterialParameters, bool IsIgnoreEvents, const UObject* Caller)
 {
 	if (!SkelMeshComp)
@@ -55,7 +87,7 @@ bool UFaceFXComponent::Setup(USkeletalMeshComponent* SkelMeshComp, UActorCompone
 	if (Idx == INDEX_NONE)
 	{
 		//add new entry
-		Idx = Entries.Add(FFaceFXEntry(SkelMeshComp, AudioComponent, Asset, IsCompensateForForceFrontXAxsis, IsAutoPlaySound, IsDisableMorphTargets, IsDisableMaterialParameters, IsIgnoreEvents));
+		Idx = Entries.Add(FFaceFXEntry(SkelMeshComp, AudioComponent, Asset, IsCompensateForForceFrontXAxsis, IsAutoPlaySound, IsIgnoreEvents));
 	}
 	checkf(Idx != INDEX_NONE, TEXT("Internal Error: Unable to add new FaceFX entry."));
 
@@ -65,7 +97,7 @@ bool UFaceFXComponent::Setup(USkeletalMeshComponent* SkelMeshComp, UActorCompone
 		CreateCharacter(Entries[Idx]);
 	}
 
-	return false;
+	return true;
 }
 
 bool UFaceFXComponent::PlayById(FName Group, FName AnimName, USkeletalMeshComponent* SkelMeshComp, bool Loop, const UObject* Caller)
@@ -360,7 +392,7 @@ void UFaceFXComponent::CreateCharacter(FFaceFXEntry& Entry)
 			Entry.Character = NewObject<UFaceFXCharacter>(this);
 			checkf(Entry.Character, TEXT("Unable to instantiate a FaceFX character. Possibly Out of Memory."));
 
-			if (!Entry.Character->Load(FaceFXActor, Entry.bIsCompensateForForceFrontXAxis, Entry.bIsDisableMorphTargets, Entry.bIsDisableMaterialParameters))
+			if (!Entry.Character->Load(FaceFXActor, Entry.bIsCompensateForForceFrontXAxis))
 			{
 				UE_LOG(LogFaceFX, Error, TEXT("SkeletalMesh Component FaceFX failed to get initialized. Loading failed. Component=%s. Asset=%s"), *GetName(), *Entry.Asset.ToSoftObjectPath().ToString());
 				Entry.Character = nullptr;

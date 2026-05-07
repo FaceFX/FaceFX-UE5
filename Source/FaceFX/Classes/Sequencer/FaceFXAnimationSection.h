@@ -183,8 +183,6 @@ public:
 
 private:
 
-
-
 	/** The if of the skel mesh component where this key is working on */
 	UPROPERTY(EditAnywhere, Category = FaceFX)
 	FFaceFXSkelMeshComponentId SkelMeshComponentId;
@@ -205,7 +203,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = FaceFX)
 	float EndOffset;
 
-	/** Indicator if the facial animation duration was loaded and cached already */
+	/** Indicator if the FaceFX animation duration was loaded and cached already */
 	UPROPERTY(Transient)
 	mutable uint8 bIsAnimationDurationLoaded : 1;
 

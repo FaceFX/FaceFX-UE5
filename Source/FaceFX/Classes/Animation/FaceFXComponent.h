@@ -39,11 +39,31 @@ struct FACEFX_API FFaceFXEntry
 {
 	GENERATED_USTRUCT_BODY()
 
-	FFaceFXEntry() : SkelMeshComp(nullptr), AudioComp(nullptr), Character(nullptr), bIsCompensateForForceFrontXAxis(false), bIsAutoPlaySound(true), bIsDisableMorphTargets(false), bIsDisableMaterialParameters(false), bIsIgnoreEvents(false) {}
-	FFaceFXEntry(USkeletalMeshComponent* InSkelMeshComp, UActorComponent* InAudioComp, const TSoftObjectPtr<class UFaceFXActor>& InAsset, bool InIsCompensateForForceFrontXAxis = false, bool InIsAutoPlaySound = true,
-		bool InIsDisableMorphTargets = false, bool InbIsDisableMaterialParameters = false, bool InIsIgnoreEvents = false) :
-		SkelMeshComp(InSkelMeshComp), AudioComp(InAudioComp), Asset(InAsset), Character(nullptr), bIsCompensateForForceFrontXAxis(InIsCompensateForForceFrontXAxis), bIsAutoPlaySound(InIsAutoPlaySound),
-		bIsDisableMorphTargets(InIsDisableMorphTargets), bIsDisableMaterialParameters(InbIsDisableMaterialParameters), bIsIgnoreEvents(InIsIgnoreEvents){}
+	FFaceFXEntry()
+		: SkelMeshComp(nullptr)
+		, AudioComp(nullptr)
+		, Character(nullptr)
+		, bIsCompensateForForceFrontXAxis(false)
+		, bIsAutoPlaySound(true)
+		, bIsDisableMorphTargets(false)
+		, bIsDisableMaterialParameters(false)
+		, bIsIgnoreEvents(false) {}
+
+	FFaceFXEntry(USkeletalMeshComponent* InSkelMeshComp,
+				 UActorComponent* InAudioComp,
+				 const TSoftObjectPtr<class UFaceFXActor>& InAsset,
+				 bool InCompensateForForceFrontXAxis = false,
+				 bool InAutoPlaySound = true,
+				 bool InIgnoreEvents = false)
+		: SkelMeshComp(InSkelMeshComp)
+		, AudioComp(InAudioComp)
+		, Asset(InAsset)
+		, Character(nullptr)
+		, bIsCompensateForForceFrontXAxis(InCompensateForForceFrontXAxis)
+		, bIsAutoPlaySound(InAutoPlaySound)
+		, bIsDisableMorphTargets(false)
+		, bIsDisableMaterialParameters(false)
+		, bIsIgnoreEvents(InIgnoreEvents){}
 
 	/** The linked skelmesh component */
 	UPROPERTY(BlueprintReadOnly, Category=FaceFX)
@@ -53,7 +73,7 @@ struct FACEFX_API FFaceFXEntry
 	UPROPERTY(BlueprintReadOnly, Category=FaceFX)
 	UActorComponent* AudioComp;
 
-	/** The asset to use when instantiating the facial character instance */
+	/** The asset to use when instantiating the FaceFX character instance */
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category=FaceFX)
 	TSoftObjectPtr<class UFaceFXActor> Asset;
 
@@ -70,11 +90,11 @@ struct FACEFX_API FFaceFXEntry
 	uint8 bIsAutoPlaySound : 1;
 
 	/** Indicates whether or not FaceFX tracks will animate matched morph targets. */
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category=FaceFX, DisplayName="Disable Morph Targets")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category=FaceFX, DisplayName="Disable Morph Targets", Meta=(DeprecatedProperty, BlueprintInternalUseOnly="true"))
 	uint8 bIsDisableMorphTargets : 1;
 
 	/** Indicates or not FaceFX tracks will animate matched material parameters.. */
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = FaceFX, DisplayName="Disable Material Parameters")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = FaceFX, DisplayName="Disable Material Parameters", Meta=(DeprecatedProperty, BlueprintInternalUseOnly="true"))
 	uint8 bIsDisableMaterialParameters : 1;
 
 	/** Indicates whether or not FaceFX events are ignored. */
@@ -92,7 +112,7 @@ struct FACEFX_API FFaceFXEntry
 	}
 };
 
-/** A component that allows to setup facial animation for skelmesh components and to use the blend facial animation nodes into their animation blueprints */
+/** A component that allows to setup FaceFX animation for skelmesh components and to use the blend FaceFX animation nodes into their animation blueprints */
 UCLASS(ClassGroup=(Rendering, Common), hidecategories=(Object, Sockets, Activation), editinlinenew, meta=(BlueprintSpawnableComponent))
 class FACEFX_API UFaceFXComponent : public UActorComponent
 {
@@ -109,14 +129,24 @@ public:
 	* @param SkelMeshComp The skelmesh component setting up the FaceFX character.
 	* @param AudioComponent The audio component to assign to the FaceFX character. Keep empty to use the first audio component found on the owning actor.
 	* @param Asset The FaceFX asset to use.
-	* @param IsCompensateForForceFrontXAxis Should only be enabled if Force Front XAxis was enabled when the Skeletal Mesh was imported.
-	* @param IsAutoPlaySound Indicates whether or not the sound assigned to a FaceFX animation is automatically played when the animation is played.
-	* @param IsDisableMorphTargets Indicates whether or not FaceFX tracks will animate matched morph targets.
-	* @param IsDisableMaterialParameters Indicates or not FaceFX tracks will animate matched material parameters.
-	* @param IsIgnoreEvents Indicates whether or not FaceFX events are ignored.
+	* @param CompensateForForceFrontXAxis Should only be enabled if Force Front XAxis was enabled when the Skeletal Mesh was imported.
+	* @param AutoPlaySound Indicates whether or not the sound assigned to a FaceFX animation is automatically played when the animation is played.
+	* @param IgnoreEvents Indicates whether or not FaceFX events are ignored.
 	* @return True if succeeded, else false
 	*/
-	UFUNCTION(BlueprintCallable, Category=FaceFX, Meta=(IsAutoPlaySound=true, HidePin="Caller", DefaultToSelf="Caller"))
+	UFUNCTION(BlueprintCallable, Category=FaceFX, Meta=(DisplayName="Setup FaceFX Component", AutoPlaySound=true, HidePin="Caller", DefaultToSelf="Caller"))
+	bool SetupFaceFXComponent(USkeletalMeshComponent* SkelMeshComp,
+               UActorComponent* AudioComponent,
+			   UFaceFXActor* Asset,
+			   UPARAM(DisplayName="Compensate For Force Front X-Axis") bool CompensateForForceFrontXAxis,
+			   UPARAM(DisplayName="Automatically Play Sound") bool AutoPlaySound,
+			   UPARAM(DisplayName="Ignore Events") bool IgnoreEvents,
+			   const UObject* Caller = nullptr);
+
+	/**
+	* DEPRECATED. Use the version of Setup without IsDisableMorphTargets and IsDisableMaterialParameters instead.
+	*/
+	UFUNCTION(BlueprintCallable, Category=FaceFX, Meta=(IsAutoPlaySound=true, HidePin="Caller", DefaultToSelf="Caller", DeprecatedFunction, DeprecationMessage="Use Setup FaceFX Component instead", BlueprintInternalUseOnly="true"))
 	bool Setup(USkeletalMeshComponent* SkelMeshComp,
                UActorComponent* AudioComponent,
 			   UFaceFXActor* Asset,
@@ -128,7 +158,7 @@ public:
 			   const UObject* Caller = nullptr);
 
 	/**
-	* Starts the playback of the given facial animation for a given skel mesh components character
+	* Starts the playback of the given FaceFX animation for a given skel mesh components character
 	* @param Group The animation group
 	* @param AnimName The animation to play
 	* @param SkelMeshComp The skelmesh component to start the playback for. Keep nullptr to use the first setup skelmesh component character instead
@@ -139,7 +169,7 @@ public:
 	bool PlayById(FName Group, FName AnimName, USkeletalMeshComponent* SkelMeshComp = nullptr, bool Loop = false, const UObject* Caller = nullptr);
 
 	/**
-	* Starts the playback of the given facial animation for a given skel mesh components character
+	* Starts the playback of the given FaceFX animation for a given skel mesh components character
 	* @param Animation The animation to play
 	* @param SkelMeshComp The skelmesh component to start the playback for. Keep nullptr to use the first setup skelmesh component character instead
 	* @param Loop True for when the animation shall loop, else false
@@ -149,7 +179,7 @@ public:
 	bool Play(class UFaceFXAnim* Animation, USkeletalMeshComponent* SkelMeshComp = nullptr, bool Loop = false, const UObject* Caller = nullptr);
 
 	/**
-	* Stops the playback of the currently playing facial animation for a given skel mesh components character
+	* Stops the playback of the currently playing FaceFX animation for a given skel mesh components character
 	* @param SkelMeshComp The skelmesh component to stop the playback for. Keep nullptr to use the first setup skelmesh component character instead
 	* @returns True if succeeded, else false
 	*/
@@ -157,13 +187,13 @@ public:
 	bool Stop(USkeletalMeshComponent* SkelMeshComp = nullptr, const UObject* Caller = nullptr);
 
 	/**
-	* Stops the playback of all currently playing facial animations for any skel mesh components character
+	* Stops the playback of all currently playing FaceFX animations for any skel mesh components character
 	*/
 	UFUNCTION(BlueprintCallable, Category=FaceFX)
 	void StopAll();
 
 	/**
-	* Pause the playback of the currently playing facial animation for a given skel mesh components character
+	* Pause the playback of the currently playing FaceFX animation for a given skel mesh components character
 	* @param SkelMeshComp The skelmesh component to pause the playback for. Keep nullptr to use the first setup skelmesh component character instead
 	* @returns True if succeeded, else false
 	*/
@@ -171,7 +201,7 @@ public:
 	bool Pause(USkeletalMeshComponent* SkelMeshComp = nullptr, const UObject* Caller = nullptr);
 
 	/**
-	* Resumes the playback of the currently paused facial animation for a given skel mesh components character
+	* Resumes the playback of the currently paused FaceFX animation for a given skel mesh components character
 	* @param SkelMeshComp The skelmesh component to resume the playback for. Keep nullptr to use the first setup skelmesh component character instead
 	* @returns True if succeeded, else false
 	*/
@@ -179,10 +209,10 @@ public:
 	bool Resume(USkeletalMeshComponent* SkelMeshComp = nullptr, const UObject* Caller = nullptr);
 
 	/**
-	* Jumps to a given position within the current facial animation playback or at a given animation
+	* Jumps to a given position within the current FaceFX animation playback or at a given animation
 	* @param Position The target position to jump to (in seconds)
 	* @param Pause Indicator if the playback shall be paused right afterwards
-	* @param Animation The animation to start. Keep nullptr to jump within the currently playing facial animation
+	* @param Animation The animation to start. Keep nullptr to jump within the currently playing FaceFX animation
 	* @param LoopAnimation Indicator if the animation to start shall be looped when being newly started
 	* @param SkelMeshComp The skelmesh component to resume the playback for. Keep nullptr to use the first setup skelmesh component character instead
 	* @returns True if succeeded, else false
@@ -191,12 +221,12 @@ public:
 	bool JumpTo(float Position, bool Pause = false, class UFaceFXAnim* Animation = nullptr, bool LoopAnimation = false, USkeletalMeshComponent* SkelMeshComp = nullptr, const UObject* Caller = nullptr);
 
 	/**
-	* Jumps to a given position within the current facial animation playback or at a given animation
+	* Jumps to a given position within the current FaceFX animation playback or at a given animation
 	* @param Position The target position to jump to (in seconds)
 	* @param Pause Indicator if the playback shall be paused right afterwards
-	* @param Animation The animation to start. Keep nullptr to jump within the currently playing facial animation
-	* @param Group The animation group to start. Keep Group and AnimName to NAME_None to jump within the currently playing facial animation
-	* @param AnimName The animation id to start. Keep Group and AnimName to NAME_None to jump within the currently playing facial animation
+	* @param Animation The animation to start. Keep nullptr to jump within the currently playing FaceFX animation
+	* @param Group The animation group to start. Keep Group and AnimName to NAME_None to jump within the currently playing FaceFX animation
+	* @param AnimName The animation id to start. Keep Group and AnimName to NAME_None to jump within the currently playing FaceFX animation
 	* @param LoopAnimation Indicator if the animation to start shall be looped when being newly started
 	* @param SkelMeshComp The skelmesh component to resume the playback for. Keep nullptr to use the first setup skelmesh component character instead
 	* @returns True if succeeded, else false
@@ -205,7 +235,7 @@ public:
 	bool JumpToById(float Position, bool Pause = false, FName Group = NAME_None, FName AnimName = NAME_None, bool LoopAnimation = false, USkeletalMeshComponent* SkelMeshComp = nullptr, const UObject* Caller = nullptr);
 
 	/**
-	* Gets the indicator if the facial animation playback for a given skel mesh components character is playing at the moment
+	* Gets the indicator if the FaceFX animation playback for a given skel mesh components character is playing at the moment
 	* @param SkelMeshComp The skelmesh component to check the playback for. Keep nullptr to use the first setup skelmesh component character instead
 	* @returns True if playing, else false
 	*/
@@ -213,7 +243,7 @@ public:
 	bool IsPlaying(USkeletalMeshComponent* SkelMeshComp = nullptr, const UObject* Caller = nullptr) const;
 
 	/**
-	* Gets the indicator if the facial animation playback for a given skel mesh components character is playing a specific animation at the moment
+	* Gets the indicator if the FaceFX animation playback for a given skel mesh components character is playing a specific animation at the moment
 	* @param AnimId The id of the animation which we check playback against
 	* @param SkelMeshComp The skelmesh component to check the playback for. Keep nullptr to use the first setup skelmesh component character instead
 	* @returns True if playing the given animation right now, else false
@@ -222,7 +252,7 @@ public:
 	bool IsPlayingAnimation(const FFaceFXAnimId& AnimId, USkeletalMeshComponent* SkelMeshComp = nullptr, const UObject* Caller = nullptr) const;
 
 	/**
-	* Gets the indicator if the facial animation playback for a given skel mesh components character is paused
+	* Gets the indicator if the FaceFX animation playback for a given skel mesh components character is paused
 	* @param SkelMeshComp The skelmesh component to check the playback for. Keep nullptr to use the first setup skelmesh component character instead
 	* @returns True if paused, else false
 	*/
@@ -230,18 +260,18 @@ public:
 	bool IsPaused(USkeletalMeshComponent* SkelMeshComp = nullptr, const UObject* Caller = nullptr) const;
 
 	/**
-	* Gets the indicator if the facial animation playback for a given skel mesh components character has a specific animation activated at the moment (playing or not)
+	* Gets the indicator if the FaceFX animation playback for a given skel mesh components character has a specific animation activated at the moment (playing or not)
 	* @param AnimId The id of the animation which we check activation against
 	* @param SkelMeshComp The skelmesh component to check the playback for. Keep nullptr to use the first setup skelmesh component character instead
 	* @returns True if the given animation is active right now, else false
 	*/
 	bool IsAnimationActive(const FFaceFXAnimId& AnimId, USkeletalMeshComponent* SkelMeshComp = nullptr, const UObject* Caller = nullptr) const;
 
-	/** Event that triggers whenever any of the FaceFX character instances plays a facial animation that requested the startup of audio playback */
+	/** Event that triggers whenever any of the FaceFX character instances plays a FaceFX animation that requested the startup of audio playback */
 	UPROPERTY(BlueprintAssignable, Category=FaceFX)
 	FOnFaceFXAudioStartEventSignature OnPlaybackAudioStart;
 
-	/** Event that triggers whenever any of the FaceFX character instances stops playing a facial animation */
+	/** Event that triggers whenever any of the FaceFX character instances stops playing a FaceFX animation */
 	UPROPERTY(BlueprintAssignable, Category=FaceFX)
 	FOnFaceFXEventSignature OnPlaybackStopped;
 
@@ -343,7 +373,7 @@ private:
 	/**
 	* Callback for when a FaceFX character instance requested audio playback
 	* @param Character The character instance who requested playback
-	* @param AnimId The facial animation that is played and requested the playback
+	* @param AnimId The FaceFX animation that is played and requested the playback
 	* @param IsAudioStarted Indicator if the FaceFX character instance successfully started audio playback on its own
 	* @param AudioComponentStartedOn The audio component on which the FaceFX character instance started the audio playback on. Will be set if IsAudioStarted is true
 	*/
@@ -353,7 +383,7 @@ private:
 	/**
 	* Callback for when a FaceFX character instance stopped playback
 	* @param Character The character instance who stopped playback
-	* @param AnimId The facial animation that was played and stopped
+	* @param AnimId The FaceFX animation that was played and stopped
 	*/
 	UFUNCTION()
 	void OnCharacterPlaybackStopped(UFaceFXCharacter* Character, const FFaceFXAnimId& AnimId);
@@ -361,7 +391,7 @@ private:
 	/**
 	* Callback for when a FaceFX character instance triggers an animation event from within the FaceFX runtime
 	* @param Character The character instance who triggered the event.
-	* @param AnimId The facial animation that is played and triggers the event.
+	* @param AnimId The FaceFX animation that is played and triggers the event.
 	* @param ChannelIndex The index of the channel that the animation is currently playing in.
 	* @param ChannelTime The current playback time in the animation when the event is fired.
 	* @param EventTime The exact time of playback duration at which the event was triggered.

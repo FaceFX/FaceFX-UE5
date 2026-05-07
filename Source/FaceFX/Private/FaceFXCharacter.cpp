@@ -37,8 +37,6 @@ DECLARE_CYCLE_STAT(TEXT("Load Assets"), STAT_FaceFXLoad, STATGROUP_FACEFX);
 DECLARE_CYCLE_STAT(TEXT("Play"), STAT_FaceFXPlay, STATGROUP_FACEFX);
 DECLARE_CYCLE_STAT(TEXT("Broadcast Audio Events"), STAT_FaceFXAudioEvents, STATGROUP_FACEFX);
 DECLARE_CYCLE_STAT(TEXT("Broadcast Anim Events"), STAT_FaceFXAnimEvents, STATGROUP_FACEFX);
-DECLARE_CYCLE_STAT(TEXT("Process Morph Targets"), STAT_FaceFXProcessMorphTargets, STATGROUP_FACEFX);
-DECLARE_CYCLE_STAT(TEXT("Process Material Parameters"), STAT_FaceFXProcessMaterialParameters, STATGROUP_FACEFX);
 
 namespace
 {
@@ -157,9 +155,6 @@ bool UFaceFXCharacter::TickUntil(float Duration, bool& OutAudioStarted, bool Ign
 	CurrentAnimProgress = CurrentTime;
 	bIsDirty = true;
 
-	ProcessMorphTargets();
-	ProcessMaterialParameters();
-
 	return true;
 }
 
@@ -235,9 +230,6 @@ void UFaceFXCharacter::Tick(float DeltaTime)
 
 		OnPlaybackStartAudio.Broadcast(this, GetCurrentAnimationId(), AudioStarted, AudioCompStartedOn);
 	}
-
-	ProcessMorphTargets();
-	ProcessMaterialParameters();
 
 	bIsDirty = true;
 
@@ -584,8 +576,6 @@ bool UFaceFXCharacter::Stop(bool enforceStop)
 
 	UnloadCurrentAnim();
 
-	ResetMaterialParametersToDefaults();
-
 	if (WasPlayingOrPaused)
 	{
 		SCOPE_CYCLE_COUNTER(STAT_FaceFXAudioEvents);
@@ -703,9 +693,6 @@ void UFaceFXCharacter::Reset()
 	BoneTransforms.Empty();
 	BoneIds.Empty();
 
-	ResetMorphTargets();
-	ResetMaterialParameters();
-
 	FaceFXActor = nullptr;
 
 	bIsDirty = true;
@@ -735,7 +722,7 @@ void UFaceFXCharacter::OnFaceFXEvent(const FxEventFiringContext* Context, const 
 	}
 }
 
-bool UFaceFXCharacter::Load(const UFaceFXActor* Dataset, bool IsCompensateForForceFrontXAxis, bool IsDisabledMorphTargets, bool IsDisableMaterialParameters)
+bool UFaceFXCharacter::Load(const UFaceFXActor* Dataset, bool CompensateForForceFrontXAxis)
 {
 	SCOPE_CYCLE_COUNTER(STAT_FaceFXLoad);
 
@@ -763,7 +750,7 @@ bool UFaceFXCharacter::Load(const UFaceFXActor* Dataset, bool IsCompensateForFor
 	//only create the bone set handle if there is bone set data
 	if (ActorData.BonesRawData.Num() > 0)
 	{
-		const FxBoneSetFlags BoneSetCreationFlags = ::GetBoneSetCreationFlags(BlendMode, IsCompensateForForceFrontXAxis);
+		const FxBoneSetFlags BoneSetCreationFlags = ::GetBoneSetCreationFlags(BlendMode, CompensateForForceFrontXAxis);
 
 		FxResult Result = fxBoneSetCreate(&ActorData.BonesRawData[0], ActorData.BonesRawData.Num(), FX_DATA_VALIDATION_ON, BoneSetCreationFlags, &BoneSet, &Allocator);
 
@@ -902,197 +889,9 @@ bool UFaceFXCharacter::Load(const UFaceFXActor* Dataset, bool IsCompensateForFor
 		}
 	}
 
-	bCompensatedForForceFrontXAxis = IsCompensateForForceFrontXAxis;
-	bDisabledMorphTargets = IsDisabledMorphTargets;
-	bDisabledMaterialParameters = IsDisableMaterialParameters;
-
-	ResetMorphTargets();
-	ResetMaterialParameters();
-	ResetMaterialParametersToDefaults();
-
-	//SetupMaterialParameters after SetupMorphTargets as we ignore the morph target tracks as material parameters
-	if ( (!bDisabledMorphTargets && !SetupMorphTargets(Dataset, TrackIds)) ||
-		(!IsDisableMaterialParameters && !SetupMaterialParameters(Dataset, TrackIds, MorphTargetNames)) )
-	{
-		Reset();
-		return false;
-	}
+	bCompensatedForForceFrontXAxis = CompensateForForceFrontXAxis;
 
 	return true;
-}
-
-void UFaceFXCharacter::ProcessMorphTargets()
-{
-	SCOPE_CYCLE_COUNTER(STAT_FaceFXProcessMorphTargets);
-
-	const int32 MorphTargetsToProcess = MorphTargetNames.Num();
-
-	if (MorphTargetsToProcess == 0)
-	{
-		return;
-	}
-
-	if (USkeletalMeshComponent* SkelMeshComp = GetOwningSkelMeshComponent())
-	{
-		for (int32 Idx = 0; Idx < MorphTargetsToProcess; ++Idx)
-		{
-			SkelMeshComp->SetMorphTarget(MorphTargetNames[Idx], TrackValues[MorphTargetIndices[Idx]]);
-		}
-	}
-	else
-	{
-		UE_LOG(LogFaceFX, Error, TEXT("UFaceFXCharacter::ProcessMorphTargets. Unable to find owners skel mesh component. Actor: %s. Asset: %s"), *GetNameSafe(GetOwningActor()), *GetNameSafe(FaceFXActor));
-	}
-}
-
-bool UFaceFXCharacter::SetupMorphTargets(const UFaceFXActor* Dataset, const TArray<uint64_t>& TrackIds)
-{
-	check(IsLoaded());
-	check(Dataset);
-
-	USkeletalMeshComponent* SkelMeshComp = GetOwningSkelMeshComponent();
-
-	if (!SkelMeshComp)
-	{
-		return true;
-	}
-
-	const USkeletalMesh* SkeletalMesh = SkelMeshComp->GetSkeletalMeshAsset();
-
-	const int32 NumMorphTargets = SkeletalMesh ? SkeletalMesh->GetMorphTargetIndexMap().Num() : 0;
-
-	if (NumMorphTargets == 0)
-	{
-		return true;
-	}
-
-	MorphTargetNames.Reserve(NumMorphTargets);
-	MorphTargetIndices.Reserve(NumMorphTargets);
-
-	int32 NumTracks = TrackIds.Num();
-
-	for (int32 TrackIndex = 0; TrackIndex < NumTracks; ++TrackIndex)
-	{
-		const uint64_t TrackId = TrackIds[TrackIndex];
-
-		const FFaceFXIdData* AssetIdData = Dataset->GetData().Ids.FindByKey(TrackId);
-
-		if (!AssetIdData)
-		{
-			continue;
-		}
-
-		if (SkeletalMesh->GetMorphTargetIndexMap().Contains(AssetIdData->Name))
-		{
-			MorphTargetNames.Add(AssetIdData->Name);
-			MorphTargetIndices.Add((size_t)TrackIndex);
-
-			UE_LOG(LogFaceFX, Verbose, TEXT("UFaceFXCharacter::SetupMorphTargets. driving morph target named %s (Asset: %s)"), *AssetIdData->Name.ToString(), *GetNameSafe(FaceFXActor));
-		}
-	}
-
-	return true;
-}
-
-bool UFaceFXCharacter::SetupMaterialParameters(const UFaceFXActor* Dataset, const TArray<uint64_t>& TrackIds, const TArray<FName>& IgnoredTracks)
-{
-	check(IsLoaded());
-	check(Dataset);
-
-	USkeletalMeshComponent* SkelMeshComp = GetOwningSkelMeshComponent();
-
-	if (!SkelMeshComp)
-	{
-		return false;
-	}
-
-	const int32 NumMaterials = SkelMeshComp->GetNumMaterials();
-
-	if (NumMaterials == 0)
-	{
-		return false;
-	}
-
-	MaterialParameterNames.Reserve(NumMaterials);
-	MaterialParameterIndices.Reserve(NumMaterials);
-
-	int32 NumTracks = TrackIds.Num();
-
-	for (int32 TrackIndex = 0; TrackIndex < NumTracks; ++TrackIndex)
-	{
-		const uint64_t TrackId = TrackIds[TrackIndex];
-
-		const FFaceFXIdData* AssetIdData = Dataset->GetData().Ids.FindByKey(TrackId);
-
-		if (!AssetIdData)
-		{
-			continue;
-		}
-
-		if (IgnoredTracks.Contains(AssetIdData->Name))
-		{
-			continue;
-		}
-
-		for (int32 MaterialIndex = 0; MaterialIndex < NumMaterials; ++MaterialIndex)
-		{
-			if (UMaterialInterface* Material = SkelMeshComp->GetMaterial(MaterialIndex))
-			{
-				float ParamterValue;
-
-				if (Material->GetScalarParameterValue(AssetIdData->Name, ParamterValue))
-				{
-					MaterialParameterNames.Add(AssetIdData->Name);
-					MaterialParameterIndices.Add((size_t)TrackIndex);
-
-					UE_LOG(LogFaceFX, Verbose, TEXT("UFaceFXCharacter::SetupMaterialParameters. driving material parameter named %s (Asset: %s)"), *AssetIdData->Name.ToString(), *GetNameSafe(FaceFXActor));
-
-					break;
-				}
-			}
-		}
-	}
-
-	return true;
-}
-
-void UFaceFXCharacter::ProcessMaterialParameters()
-{
-	SCOPE_CYCLE_COUNTER(STAT_FaceFXProcessMaterialParameters);
-
-	const int32 MaterialParametersToProcess = MaterialParameterNames.Num();
-
-	if (MaterialParametersToProcess == 0)
-	{
-		return;
-	}
-
-	if (USkeletalMeshComponent* SkelMeshComp = GetOwningSkelMeshComponent())
-	{
-		for (int32 Idx = 0; Idx < MaterialParametersToProcess; ++Idx)
-		{
-			SkelMeshComp->SetScalarParameterValueOnMaterials(MaterialParameterNames[Idx], TrackValues[MaterialParameterIndices[Idx]]);
-		}
-	}
-	else
-	{
-		UE_LOG(LogFaceFX, Error, TEXT("UFaceFXCharacter::ProcessMaterialParameters. Unable to find owners skel mesh component. Actor: %s. Asset: %s"), *GetNameSafe(GetOwningActor()), *GetNameSafe(FaceFXActor));
-	}
-}
-
-void UFaceFXCharacter::ResetMaterialParametersToDefaults()
-{
-	if (USkeletalMeshComponent* SkelMeshComp = GetOwningSkelMeshComponent())
-	{
-		for (int32 Idx = 0; Idx < MaterialParameterNames.Num(); ++Idx)
-		{
-			const FName& ParameterName = MaterialParameterNames[Idx];
-
-			const float DefaultValue = SkelMeshComp->GetScalarParameterDefaultValue(ParameterName);
-
-			SkelMeshComp->SetScalarParameterValueOnMaterials(ParameterName, DefaultValue);
-		}
-	}
 }
 
 bool UFaceFXCharacter::IsCanPlay(const UFaceFXAnim* Animation) const
@@ -1259,7 +1058,7 @@ void UFaceFXCharacter::OnFaceFXAssetChanged(UFaceFXAsset* Asset)
 		if (UFaceFXActor* ActorAsset = Cast<UFaceFXActor>(Asset))
 		{
 			//actor asset changed -> reload whole actor
-			Load(ActorAsset, bCompensatedForForceFrontXAxis, bDisabledMorphTargets, bDisabledMaterialParameters);
+			Load(ActorAsset, bCompensatedForForceFrontXAxis);
 		}
 		else
 		{
@@ -1268,4 +1067,5 @@ void UFaceFXCharacter::OnFaceFXAssetChanged(UFaceFXAsset* Asset)
 		}
 	}
 }
+
 #endif //WITH_EDITOR
