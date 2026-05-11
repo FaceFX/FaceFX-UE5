@@ -119,6 +119,9 @@ void FAnimNode_BlendFaceFXAnimation::LoadFaceFXData(FAnimInstanceProxy* AnimInst
 					CurrentFaceFXCurveValues.Add(0.f);
 				}
 
+				// Make sure the FaceFX curves are pre-sorted to avoid a per-frame sort by the BulkGet()/BulkSet() functions.
+				FaceFXCurves.EnsureSorted();
+
 				BlendMode = FaceFXChar->GetBlendMode();
 
 				const TArray<FName>& BoneNames = FaceFXChar->GetBoneNames();

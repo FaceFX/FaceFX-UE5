@@ -87,8 +87,18 @@ private:
 	/** The bone indices where to copy the transforms into. Based on the bone names coming from the FaceFX character instance. */
 	TArray<FFaceFXBoneTransformMappingEntry> FaceFXBoneTransformMap;
 
+	/** struct that holds FaceFX curves (name, index) for use with BulkGet() / BulkSet() */
+	struct FFaceFXBulkCurves : UE::Anim::TNamedValueArray<FDefaultAllocator, UE::Anim::FNamedIndexElement>
+	{
+		// Sorts the curves by name. Make sure to call this after all of the curves have been added.
+		void EnsureSorted()
+		{
+			SortElementsIfRequired();
+		}
+	};
+
 	/** The FaceFX curves. These are in the same order as TrackValues from the FaceFX character. */
-	UE::Anim::TNamedValueArray<FDefaultAllocator, UE::Anim::FNamedIndexElement> FaceFXCurves;
+	FFaceFXBulkCurves FaceFXCurves;
 	/** The current values of the FaceFX curves in the incoming pose (what we will be lerping with). */
 	TArray<float> CurrentFaceFXCurveValues;
 
