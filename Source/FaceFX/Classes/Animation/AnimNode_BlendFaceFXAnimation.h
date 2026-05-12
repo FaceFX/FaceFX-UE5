@@ -41,15 +41,40 @@ struct FACEFX_API FAnimNode_BlendFaceFXAnimation : public FAnimNode_Base
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Links)
 	FComponentSpacePoseLink ComponentPose;
 
-	/** The strength of blending in the FaceFX animation. Will be clamped between 0.f and 1.f. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=BlendMode, meta=(PinShownByDefault, UIMin=0.f, UIMax=1.f))
+	// @todo What about the transitions where the node becomes active / inactive?
+
+	/** The blend alpha for FaceFX bones animation. Will be clamped between 0.f and 1.f. */
+	UPROPERTY(EditAnywhere,
+		      BlueprintReadWrite,
+			  Category=BlendMode,
+			  meta=(PinShownByDefault,
+				    UIMin=0.f,
+					UIMax=1.f))
+	float BonesAlpha;
+
+	/** The blend alpha for FaceFX curves animation. Will be clamped between 0.f and 1.f. */
+	UPROPERTY(EditAnywhere,
+		      BlueprintReadWrite,
+			  Category=BlendMode,
+			  meta=(PinShownByDefault,
+				    UIMin=0.f,
+					UIMax=1.f))
+	float CurvesAlpha;
+
+	/** Deprecated (use BonesAlpha or CurvesAlpha instead). */
+	UPROPERTY(EditAnywhere,
+		      BlueprintReadOnly,
+			  Category=BlendMode,
+			  meta=(UIMin=0.f,
+					UIMax=1.f,
+					DeprecatedProperty,
+					DeprecationMessage="Deprecated. Use Bones Alpha or Curves Alpha instead."))
 	float Alpha;
 
 	/** Indicator if stripped name space bone mapping shall be skipped during bone matching phase in case a bone name was not found */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=BoneMapping)
 	bool bSkipBoneMappingWithoutNS;
 
-	// @todo What about the transitions where the node becomes active / inactive?
 	/** The maximum LOD setting under which this node is allowed to run. Defaults to all LOD settings. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Performance, meta = (DisplayName = "LOD Threshold"))
 	int32 LODThreshold;

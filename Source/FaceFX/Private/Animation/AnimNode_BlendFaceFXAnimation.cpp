@@ -33,6 +33,8 @@ DECLARE_CYCLE_STAT(TEXT("Blend FaceFX Bones"), STAT_FaceFXBlendBones, STATGROUP_
 DECLARE_CYCLE_STAT(TEXT("Blend FaceFX Animation - Load"), STAT_FaceFXBlendLoad, STATGROUP_FACEFX);
 
 FAnimNode_BlendFaceFXAnimation::FAnimNode_BlendFaceFXAnimation() :
+	BonesAlpha(1.f),
+	CurvesAlpha(1.f),
 	Alpha(1.f),
 	bSkipBoneMappingWithoutNS(false),
 	LODThreshold(INDEX_NONE),
@@ -53,6 +55,14 @@ void FAnimNode_BlendFaceFXAnimation::Initialize_AnyThread(const FAnimationInitia
 	if (TargetBlendTransform.Num() == 0)
 	{
 		TargetBlendTransform.AddZeroed(1);
+	}
+
+	// Update BonesAlpha with the deprecated Alpha value if required.
+	Alpha = FMath::Clamp(Alpha, 0.f, 1.f);
+	if (Alpha != 1.f)
+	{
+		BonesAlpha = Alpha;
+		Alpha = 1.f;
 	}
 
 	LoadFaceFXData(Context.AnimInstanceProxy);
@@ -249,9 +259,10 @@ void FAnimNode_BlendFaceFXAnimation::EvaluateComponentSpace_AnyThread(FComponent
 		LoadFaceFXData(Output.AnimInstanceProxy);
 	}
 
-	const float BlendWeight = FMath::Clamp(Alpha, 0.f, 1.f);
+	const float BonesBlendWeight = FMath::Clamp(BonesAlpha, 0.f, 1.f);
+	const float CurvesBlendWeight = FMath::Clamp(CurvesAlpha, 0.f, 1.f);
 
-	if (BlendWeight <= 0.f)
+	if (BonesBlendWeight == 0.f && CurvesBlendWeight == 0.f)
 	{
 		// nothing to blend in
 		return;
@@ -265,6 +276,7 @@ void FAnimNode_BlendFaceFXAnimation::EvaluateComponentSpace_AnyThread(FComponent
 		{
 			if (UFaceFXCharacter* FaceFXChar = FaceFXComp->GetCharacter(Component))
 			{
+				if (CurvesBlendWeight > 0.f)
 				{
 					SCOPE_CYCLE_COUNTER(STAT_FaceFXBlendCurves);
 
@@ -279,12 +291,13 @@ void FAnimNode_BlendFaceFXAnimation::EvaluateComponentSpace_AnyThread(FComponent
 
 					UE::Anim::FCurveUtils::BulkSet(Output.Curve,
 						                           FaceFXCurves,
-												   [this, FaceFXTrackValues, BlendWeight](const UE::Anim::FNamedIndexElement& InBulkElement)
+												   [this, FaceFXTrackValues, CurvesBlendWeight](const UE::Anim::FNamedIndexElement& InBulkElement)
 					{
-						return FMath::Lerp(CurrentFaceFXCurveValues[InBulkElement.Index], FaceFXTrackValues[InBulkElement.Index], BlendWeight);
+						return FMath::Lerp(CurrentFaceFXCurveValues[InBulkElement.Index], FaceFXTrackValues[InBulkElement.Index], CurvesBlendWeight);
 					});
 				}
 
+				if (BonesBlendWeight > 0.f)
 				{
 					SCOPE_CYCLE_COUNTER(STAT_FaceFXBlendBones);
 
@@ -333,7 +346,7 @@ void FAnimNode_BlendFaceFXAnimation::EvaluateComponentSpace_AnyThread(FComponent
 						checkSlow(!FaceFXContainsNaN(TargetBlendTransform));
 
 						//apply to pose after each bone transform update in order to have proper parent transforms when update childs
-						Output.Pose.LocalBlendCSBoneTransforms(TargetBlendTransform, BlendWeight);
+						Output.Pose.LocalBlendCSBoneTransforms(TargetBlendTransform, BonesBlendWeight);
 					}
 				}
 			}
