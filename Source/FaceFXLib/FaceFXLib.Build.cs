@@ -141,13 +141,16 @@ public class FaceFXLib : ModuleRules
 
         // 5.8 UBT detects VS2026 on my machine even though I do not have it. For now, I've changed the default to VS2022 and link
         // vs17 for both VS2022 and VS2026 enum values. WindowsCompiler.VisualStudio2026 is not defined earlier than 5.7.
-        if (Target.WindowsPlatform.Compiler != WindowsCompiler.VisualStudio2022
-    #if UE_5_7_OR_LATER
-            && Target.WindowsPlatform.Compiler != WindowsCompiler.VisualStudio2026
-    #endif
-            )
+        if (Target.IsInPlatformGroup(UnrealPlatformGroup.Windows))
         {
-            throw new BuildException(System.String.Format("FaceFX: unsupported windows compiler detected '{0}'", Target.WindowsPlatform.Compiler));
+            if (Target.WindowsPlatform.Compiler != WindowsCompiler.VisualStudio2022
+    #if UE_5_7_OR_LATER
+                && Target.WindowsPlatform.Compiler != WindowsCompiler.VisualStudio2026
+    #endif
+                )
+            {
+                throw new BuildException(System.String.Format("FaceFX: unsupported windows compiler detected '{0}'", Target.WindowsPlatform.Compiler));
+            }
         }
 
         // IMPORTANT NOTE FOR CONSOLES
