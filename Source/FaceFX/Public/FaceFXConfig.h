@@ -23,7 +23,6 @@
 #include "CoreMinimal.h"
 #include "Runtime/Launch/Resources/Version.h"
 
-#define FX_NO_1_6_API_COMPATIBILITY
 #include "facefx/facefx.h"
 
 // Version check.
