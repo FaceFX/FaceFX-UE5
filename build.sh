@@ -29,7 +29,25 @@ fi
 UE_DIR="/Users/Shared/Epic Games/UE_${UE_VERSION}/Engine"
 UAT_SH="$UE_DIR/Build/BatchFiles/RunUAT.sh"
 PLUGIN_FILE="$SCRIPT_DIR/FaceFX.uplugin"
-PACKAGE_DIR="$SCRIPT_DIR/Packages/Mac/FaceFX"
+PACKAGE_DIR="$SCRIPT_DIR/Packages/Mac/FaceFX_UE${UE_VERSION}"
+
+# Detect Runtime version from ./Source/FaceFXLib/
+RUNTIME_ROOT="$SCRIPT_DIR/Source/FaceFXLib"
+RUNTIME_PREFIX="facefx-runtime-"
+RUNTIME_VERSION=""
+
+# Find first directory starting with facefx-runtime-
+RUNTIME_DIRNAME=$(find "$RUNTIME_ROOT" -maxdepth 1 -type d -name "${RUNTIME_PREFIX}*" -printf '%f\n' | head -n 1)
+
+if [[ -z "$RUNTIME_DIRNAME" ]]; then
+    echo "ERROR: No \"${RUNTIME_PREFIX}*\" directory found in \"$RUNTIME_ROOT\"."
+    exit 1
+fi
+
+# Strip prefix to get version (e.g. 4.6.0 from facefx-runtime-4.6.0)
+RUNTIME_VERSION="${RUNTIME_DIRNAME#${RUNTIME_PREFIX}}"
+
+PACKAGE_DIR="${PACKAGE_DIR}-${RUNTIME_VERSION}"
 
 if [[ ! -f "$PLUGIN_FILE" ]]; then
     echo "ERROR: Plugin file not found:"
@@ -43,7 +61,8 @@ if [[ ! -f "$UAT_SH" ]]; then
     exit 1
 fi
 
-echo "Building FaceFX for UE $UE_VERSION..."
+echo "Building FaceFX for UE $UE_VERSION (SGX|FaceFX Runtime $RUNTIME_VERSION)..."
+echo "Package directory: \"$PACKAGE_DIR\""
 
 "$UAT_SH" BuildPlugin \
   -Plugin="$PLUGIN_FILE" \

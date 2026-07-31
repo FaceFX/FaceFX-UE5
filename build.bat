@@ -1,9 +1,7 @@
 @ECHO OFF
-
-SETLOCAL
+SETLOCAL ENABLEDELAYEDEXPANSION
 
 SET "SUPPORTED_UE_VERSIONS=5.5,5.6,5.7,5.8"
-
 SET "LATEST_UE_VERSION=5.8"
 
 SET "UE_VERSION=%~1"
@@ -25,7 +23,29 @@ IF NOT DEFINED VERSION_OK (
 SET "UE_DIR=C:\Program Files\Epic Games\UE_%UE_VERSION%\Engine\"
 SET "UAT_BAT=%UE_DIR%Build\BatchFiles\RunUAT.bat"
 SET "PLUGIN_FILE=%~dp0FaceFX.uplugin"
-SET "PACKAGE_DIR=%~dp0Packages\Windows\FaceFX"
+SET "PACKAGE_DIR=%~dp0Packages\Windows\FaceFX_UE%UE_VERSION%"
+
+REM Detect Runtime version from ./Source/FaceFXLib/
+
+SET "RUNTIME_ROOT=%~dp0Source\FaceFXLib"
+SET "RUNTIME_PREFIX=facefx-runtime-"
+SET "RUNTIME_VERSION="
+
+REM Find first directory starting with facefx-runtime-
+
+FOR /F "delims=" %%D IN ('DIR /B /AD "%RUNTIME_ROOT%\%RUNTIME_PREFIX%*"') DO (
+    SET "RUNTIME_DIRNAME=%%D"
+    GOTO :GotRuntimeDir
+)
+
+ECHO ERROR: No "%RUNTIME_PREFIX%*" directory found in "%RUNTIME_ROOT%".
+EXIT /B 1
+
+:GotRuntimeDir
+REM Strip prefix to get version (e.g. 4.6.0 from facefx-runtime-4.6.0)
+SET "RUNTIME_VERSION=!RUNTIME_DIRNAME:%RUNTIME_PREFIX%=!"
+
+SET "PACKAGE_DIR=%PACKAGE_DIR%-!RUNTIME_VERSION!"
 
 IF NOT EXIST "%PLUGIN_FILE%" (
     ECHO ERROR: Plugin file not found:
@@ -39,7 +59,8 @@ IF NOT EXIST "%UAT_BAT%" (
     EXIT /B 1
 )
 
-ECHO Building FaceFX for UE %UE_VERSION%...
+ECHO Building for UE %UE_VERSION% (SGX^|FaceFX Runtime !RUNTIME_VERSION!)...
+ECHO Package directory: "%PACKAGE_DIR%"
 
 CALL "%UAT_BAT%" BuildPlugin -Plugin="%PLUGIN_FILE%" -Package="%PACKAGE_DIR%" -Installed -NoCompile -TargetPlatforms=Win64
 
