@@ -1,6 +1,12 @@
 @ECHO OFF
 SETLOCAL ENABLEDELAYEDEXPANSION
 
+FOR /F %%I in ('git status --porcelain') DO (
+  ECHO ERROR: Repo is dirty before build
+  git status --short
+  EXIT /B 1
+)
+
 SET "SUPPORTED_UE_VERSIONS=5.5,5.6,5.7,5.8"
 SET "LATEST_UE_VERSION=5.8"
 
@@ -59,12 +65,26 @@ IF NOT EXIST "%UAT_BAT%" (
     EXIT /B 1
 )
 
+ECHO Preparing to build...
+
+python.exe UpdatePluginDescriptor.py "%PLUGIN_FILE%" "%UE_VERSION%" "!RUNTIME_VERSION!"
+
+SET "PY_EXIT=%ERRORLEVEL%"
+
+IF NOT "%PY_EXIT%"=="0" (
+    git restore -- "%PLUGIN_FILE%"
+    ECHO ERROR: UpdatePluginDescriptor.py failed with exit code %PY_EXIT%.
+    EXIT /B %PY_EXIT%
+)
+
 ECHO Building for UE %UE_VERSION% (SGX^|FaceFX Runtime !RUNTIME_VERSION!)...
 ECHO Package directory: "%PACKAGE_DIR%"
 
 CALL "%UAT_BAT%" BuildPlugin -Plugin="%PLUGIN_FILE%" -Package="%PACKAGE_DIR%" -Installed -NoCompile -TargetPlatforms=Win64
 
 SET "BUILD_EXIT=%ERRORLEVEL%"
+
+git restore -- "%PLUGIN_FILE%"
 
 IF NOT "%BUILD_EXIT%"=="0" (
     ECHO ERROR: BuildPlugin failed with exit code %BUILD_EXIT%.
@@ -74,3 +94,4 @@ IF NOT "%BUILD_EXIT%"=="0" (
 ECHO Build completed successfully.
 
 ENDLOCAL
+EXIT /B 0

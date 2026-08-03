@@ -2,6 +2,12 @@
 
 set -u
 
+if [[ -n "$(git status --porcelain)" ]]; then
+  echo "ERROR: Repo is dirty before build"
+  git status --short
+  exit 1
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 SUPPORTED_UE_VERSIONS="5.5,5.6,5.7,5.8"
@@ -61,6 +67,18 @@ if [[ ! -f "$UAT_SH" ]]; then
     exit 1
 fi
 
+echo "Preparing to build..."
+
+python "$SCRIPT_DIR/UpdatePluginDescriptor.py" "$PLUGIN_FILE" "$UE_VERSION" "$RUNTIME_VERSION"
+
+PY_EXIT=$?
+
+if [[ "$PY_EXIT" -ne 0 ]]; then
+    git restore -- "$PLUGIN_FILE"
+    echo "ERROR: UpdatePluginDescriptor.py failed with exit code $PY_EXIT."
+    exit "$PY_EXIT"
+fi
+
 echo "Building FaceFX for UE $UE_VERSION (SGX|FaceFX Runtime $RUNTIME_VERSION)..."
 echo "Package directory: \"$PACKAGE_DIR\""
 
@@ -74,9 +92,13 @@ echo "Package directory: \"$PACKAGE_DIR\""
 
 BUILD_EXIT=$?
 
+git restore -- "$PLUGIN_FILE"
+
 if [[ "$BUILD_EXIT" -ne 0 ]]; then
     echo "ERROR: BuildPlugin failed with exit code $BUILD_EXIT."
     exit "$BUILD_EXIT"
 fi
 
 echo "Build completed successfully."
+
+exit 0
