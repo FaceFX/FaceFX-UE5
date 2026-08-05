@@ -19,14 +19,14 @@
 *******************************************************************************/
 
 #include "FaceFXStyle.h"
+
+#include "ClassIconFinder.h"
 #include "FaceFXEditor.h"
 #include "FaceFXEditorConfig.h"
+#include "Interfaces/IPluginManager.h"
 #include "Styling/SlateBrush.h"
 #include "Styling/SlateStyle.h"
 #include "Styling/SlateStyleRegistry.h"
-#include "ClassIconFinder.h"
-
-#define FACEFX_IMAGE_PLUGIN_BRUSH( RelativePath, ... ) FSlateImageBrush( FFaceFXStyle::GetResourcePath(RelativePath, ".png"), __VA_ARGS__ )
 
 static FName s_BrushIdActor(TEXT("FaceFXStyle.AssetFXActor"));
 static FName s_BrushIdAnim(TEXT("FaceFXStyle.AssetFXAnim"));
@@ -35,17 +35,6 @@ static FName s_BrushIdWarn(TEXT("FaceFXStyle.IconWarn"));
 static FName s_BrushIdError(TEXT("FaceFXStyle.IconError"));
 
 TSharedPtr<FSlateStyleSet> FFaceFXStyle::StyleSet;
-
-/**
-* Gets the filepath for a file located inside the FaceFX plugin resources directory
-* @param RelativePath The path relative to the resources directory
-* @param Extension The file extension
-*/
-FString FFaceFXStyle::GetResourcePath(const FString& RelativePath, const ANSICHAR* Extension)
-{
-	static FString ResourceDir = UFaceFXEditorConfig::Get().GetFaceFXPluginFolder() / TEXT("Resources");
-	return (ResourceDir / RelativePath) + Extension;
-}
 
 /** Initializes the style set */
 void FFaceFXStyle::Initialize()
@@ -56,24 +45,30 @@ void FFaceFXStyle::Initialize()
 		return;
 	}
 
-	const FVector2D Icon40(40.F, 40.F);
-
 	StyleSet = MakeShareable(new FSlateStyleSet("FaceFXStyle"));
 	StyleSet->SetContentRoot(FPaths::EngineContentDir() / TEXT("Editor/Slate"));
 	StyleSet->SetCoreContentRoot(FPaths::EngineContentDir() / TEXT("Slate"));
 
-    StyleSet->Set(s_BrushIdActor, new FACEFX_IMAGE_PLUGIN_BRUSH(TEXT("Icons/facefxactor"), Icon40));
-    StyleSet->Set(s_BrushIdAnim, new FACEFX_IMAGE_PLUGIN_BRUSH(TEXT("Icons/facefxanim"), Icon40));
+	const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(TEXT("FaceFX"));
+	check(Plugin.IsValid());
+
+	const FString ResourceDir = Plugin->GetBaseDir() / TEXT("Resources");
+
+#define FACEFX_ICON_PATH( RelativePath ) (ResourceDir / RelativePath)
+
+	const FVector2D Icon40(40.F, 40.F);
+    StyleSet->Set(s_BrushIdActor, new FSlateImageBrush(FACEFX_ICON_PATH(TEXT("Icons/facefxactor.png")), Icon40));
+    StyleSet->Set(s_BrushIdAnim, new FSlateImageBrush(FACEFX_ICON_PATH(TEXT("Icons/facefxanim.png")), Icon40));
 
 	const FVector2D Icon16(16.F, 16.F);
-    StyleSet->Set(s_BrushIdSuccess, new FACEFX_IMAGE_PLUGIN_BRUSH(TEXT("Icons/facefxsuccess"), Icon16));
-    StyleSet->Set(s_BrushIdWarn, new FACEFX_IMAGE_PLUGIN_BRUSH(TEXT("Icons/facefxwarning"), Icon16));
-    StyleSet->Set(s_BrushIdError, new FACEFX_IMAGE_PLUGIN_BRUSH(TEXT("Icons/facefxerror"), Icon16));
+    StyleSet->Set(s_BrushIdSuccess, new FSlateImageBrush(FACEFX_ICON_PATH(TEXT("Icons/facefxsuccess.png")), Icon16));
+    StyleSet->Set(s_BrushIdWarn, new FSlateImageBrush(FACEFX_ICON_PATH(TEXT("Icons/facefxwarning.png")), Icon16));
+    StyleSet->Set(s_BrushIdError, new FSlateImageBrush(FACEFX_ICON_PATH(TEXT("Icons/facefxerror.png")), Icon16));
+
+#undef FACEFX_ICON_PATH
 
 	FSlateStyleRegistry::RegisterSlateStyle(*StyleSet.Get());
 };
-
-#undef FACEFX_IMAGE_PLUGIN_BRUSH
 
 /** Shutdown the style set */
 void FFaceFXStyle::Shutdown()
@@ -98,15 +93,15 @@ const FName& FFaceFXStyle::GetBrushIdFxAnim()
 
 const FSlateBrush* FFaceFXStyle::GetBrushStateIconSuccess()
 {
-	return StyleSet->GetBrush(s_BrushIdSuccess);
+	return StyleSet.IsValid() ? StyleSet->GetBrush(s_BrushIdSuccess) : nullptr;
 }
 
 const FSlateBrush* FFaceFXStyle::GetBrushStateIconWarning()
 {
-	return StyleSet->GetBrush(s_BrushIdWarn);
+	return StyleSet.IsValid() ? StyleSet->GetBrush(s_BrushIdWarn) : nullptr;
 }
 
 const FSlateBrush* FFaceFXStyle::GetBrushStateIconError()
 {
-	return StyleSet->GetBrush(s_BrushIdError);
+	return StyleSet.IsValid() ? StyleSet->GetBrush(s_BrushIdError) : nullptr;
 }

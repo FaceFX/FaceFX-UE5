@@ -51,6 +51,7 @@ public class FaceFXEditor : ModuleRules
                 "TimeManagement",
                 "Settings",
                 "FaceFX",
+                "Projects",
             }
         );
 

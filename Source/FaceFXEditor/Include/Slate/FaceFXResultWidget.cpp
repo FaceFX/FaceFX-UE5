@@ -378,32 +378,30 @@ TSharedRef<SWidget> FFaceFXResultWidget::ListRowWidget::GenerateWidgetForColumn(
 	}
 	else if (ColumnName == s_ColIdSuccess)
 	{
-		static const FSlateBrush* s_BrushSuccess = FFaceFXStyle::GetBrushStateIconSuccess();
-		static const FSlateBrush* s_BrushWarning = FFaceFXStyle::GetBrushStateIconWarning();
-		static const FSlateBrush* s_BrushError = FFaceFXStyle::GetBrushStateIconError();
 		static const FText s_textSuccess = LOCTEXT("ResultTypeSuccess","Success");
 		static const FText s_textWarning = LOCTEXT("ResultTypeWarning","Warning");
 		static const FText s_textError = LOCTEXT("ResultTypeError","Error");
 
 		const FSlateBrush* Brush = nullptr;
 		const FText* Tooltip = nullptr;
+
 		switch (Entry->Result.GetResultType())
 		{
 		case FFaceFXImportActionResult::ResultType::Success:
 			{
-				Brush = s_BrushSuccess;
+				Brush = FFaceFXStyle::GetBrushStateIconSuccess();
 				Tooltip = &s_textSuccess;
 				break;
 			}
 		case FFaceFXImportActionResult::ResultType::Warning:
 			{
-				Brush = s_BrushWarning;
+				Brush = FFaceFXStyle::GetBrushStateIconWarning();
 				Tooltip = &s_textWarning;
 				break;
 			}
 		case FFaceFXImportActionResult::ResultType::Error:
 			{
-				Brush = s_BrushError;
+				Brush = FFaceFXStyle::GetBrushStateIconError();
 				Tooltip = &s_textError;
 				break;
 			}
