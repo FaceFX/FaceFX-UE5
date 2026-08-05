@@ -1,7 +1,7 @@
 Context Menus
 =============
 
-The FaceFX UE5 Plugin adds several new options to the Unreal Editor asset right-click context menus in the Unreal Editor.
+The SGX|FaceFX UE5 Plugin adds several new options to the right-click context menus for assets in the Unreal Editor.
 
 FaceFXActor Asset
 -----------------

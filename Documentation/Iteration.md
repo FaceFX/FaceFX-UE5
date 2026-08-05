@@ -1,7 +1,7 @@
 Iteration
 =========
 
-It is highly recommended that you familiarize yourself with the documentation of the FaceFX Runtime plugin for FaceFX Studio. The documentation can be found in the **facefx/tools/compiler/plugin/README.md** file in the [FaceFX Runtime distribution](https://www.facefx.com/runtime-downloads).
+It is highly recommended that you familiarize yourself with the documentation of the Runtime plugin for FaceFX Studio. The documentation can be found in the **facefx/tools/compiler/plugin/README.md** file in the [FaceFX Runtime distribution](https://www.facefx.com/runtime-downloads).
 
 When you change the Face Graph or edit, delete, or add an animation in FaceFX Studio, the **.facefx** file is modified. When the **.facefx** file is modified, the data must be re-compiled and re-imported into Unreal Engine 5. This is accomplished via the FaceFX Runtime plugin for FaceFX Studio. Simply load the plugin dialog in FaceFX Studio (**Plugins -> FaceFX Runtime Compiler Options**), and click the **Save and Compile** button.
 

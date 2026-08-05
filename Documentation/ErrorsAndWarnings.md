@@ -8,7 +8,7 @@ Animation Import Errors
 
 ##### FaceFX compilation folder does not exist
 
-You need to compile your **.facefx** file with the FaceFX Runtime plugin for FaceFX Studio. This is what creates the **.ffxc** folder. When this error occurs, an invalid FaceFX actor asset is created. Be sure to delete or update it.
+You need to compile your **.facefx** file with the Runtime compiler using the `--stage-import` option (or use the Runtime Compiler plugin for FaceFX Studio). This is what creates the **.ffxc** folder. When this error occurs, an invalid actor asset is created. Be sure to delete or update it.
 
 ##### Importing audio asset failed
 
@@ -16,18 +16,18 @@ Make sure you only analyze **.wav** files from FaceFX Studio. UE5 can not import
 
 ##### Audio file does not exist
 
-The audio associated with the animation can not be found. The path to the audio comes from the **.ffxamap** file in the **.ffxc** folder. Paths are relative to the **.facefx** file path, and the **.facefx** file's path is relative to the path listed in the **Documents\FaceFX Studio 2018\facefx.clientspec** file. If your audio file does actually exist (check that first), this could be due to an error in your **facefx.clientspec** file if it has been modified by hand. Make sure the capitalization is correct (drive letters should be capitalized for example).
+The audio associated with the animation can not be found. The path to the audio comes from the **.ffxamap** file in the **.ffxc** folder. Paths are relative to the **.facefx** file path, and the **.facefx** file's path is relative to the path listed in the **Documents\FaceFX Studio 2026\facefx.clientspec** file. If your audio file does actually exist (check that first), this could be due to an error in your **facefx.clientspec** file if it has been modified by hand. Make sure the capitalization is correct (drive letters should be capitalized for example).
 
 Animation Import Warnings
 -------------------------
 
 ##### Skipped **.ffxanim** file with no audiomap entry. It may have been moved or deleted.
 
-This warning occurs when the files in your **.ffxc** folder get out of sync. Do not modify, add, or delete files from the **.ffxc** folder. Even opening the folder should be avoided because it will prevent the FaceFX Runtime plugin for FaceFX Studio from deleting it when appropriate. Performing a *Rebuild all* will fix the issue. Also, avoid using the same filename for different **.facefx** files.
+This warning occurs when the files in your **.ffxc** folder get out of sync. Do not modify, add, or delete files from the **.ffxc** folder. Even opening the folder should be avoided because it will prevent the Runtime compiler from deleting it when appropriate. Performing a *Rebuild all* (`--rebuild`) will fix the issue. Also, avoid using the same filename for different **.facefx** files.
 
 ##### Linked animation asset does not contain an audio map entry. It may have been moved or deleted. Consider to delete that animation asset.
 
-An animation that was previously imported and linked to the actor is no longer present in the actor. If the animation was deleted from the **.facefx** file, you will need to manually delete the Unreal asset.  
+An animation that was previously imported and linked to the actor is no longer present in the actor. If the animation was deleted from the **.facefx** file, you will need to manually delete the Unreal asset.
 
 Console Errors
 --------------
