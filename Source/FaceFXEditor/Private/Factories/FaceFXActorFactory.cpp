@@ -52,7 +52,7 @@ UFaceFXActorFactory::UFaceFXActorFactory(const class FObjectInitializer& PCIP)
 
 FName UFaceFXActorFactory::GetNewAssetThumbnailOverride() const
 {
-	return FFaceFXStyle::GetBrushIdFxActor();
+	return FFaceFXStyle::GetBrushIdFxActorThumbnail();
 }
 
 UObject* UFaceFXActorFactory::FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn)

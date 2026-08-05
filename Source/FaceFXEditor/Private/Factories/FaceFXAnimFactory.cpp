@@ -45,5 +45,5 @@ UObject* UFaceFXAnimFactory::FactoryCreateNew(UClass* Class, UObject* InParent, 
 
 FName UFaceFXAnimFactory::GetNewAssetThumbnailOverride() const
 {
-	return FFaceFXStyle::GetBrushIdFxAnim();
+	return FFaceFXStyle::GetBrushIdFxAnimThumbnail();
 }

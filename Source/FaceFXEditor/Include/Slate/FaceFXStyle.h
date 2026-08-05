@@ -34,16 +34,28 @@ struct FFaceFXStyle
 	static void Shutdown();
 
 	/**
-	* Gets the brush id for the actor brush
+	* Gets the brush id for the actor icon brush
 	* @returns The id
 	*/
-	static const FName& GetBrushIdFxActor();
+	static const FName& GetBrushIdFxActorIcon();
 
 	/**
-	* Gets the brush id for the animation brush
+	* Gets the brush id for the actor thumbnail brush
 	* @returns The id
 	*/
-	static const FName& GetBrushIdFxAnim();
+	static const FName& GetBrushIdFxActorThumbnail();
+
+	/**
+	* Gets the brush id for the animation icon brush
+	* @returns The id
+	*/
+	static const FName& GetBrushIdFxAnimIcon();
+
+	/**
+	* Gets the brush id for the animation thumbnail brush
+	* @returns The id
+	*/
+	static const FName& GetBrushIdFxAnimThumbnail();
 
 	/**
 	* Gets the brush for the success icon

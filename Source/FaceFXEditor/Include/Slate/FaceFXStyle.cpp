@@ -28,8 +28,10 @@
 #include "Styling/SlateStyle.h"
 #include "Styling/SlateStyleRegistry.h"
 
-static FName s_BrushIdActor(TEXT("FaceFXStyle.AssetFXActor"));
-static FName s_BrushIdAnim(TEXT("FaceFXStyle.AssetFXAnim"));
+static FName s_BrushIdActorIcon(TEXT("ClassIcon.FaceFXActor"));
+static FName s_BrushIdActorThumbnail(TEXT("ClassThumbnail.FaceFXActor"));
+static FName s_BrushIdAnimIcon(TEXT("ClassIcon.FaceFXAnim"));
+static FName s_BrushIdAnimThumbnail(TEXT("ClassThumbnail.FaceFXAnim"));
 static FName s_BrushIdSuccess(TEXT("FaceFXStyle.IconSuccess"));
 static FName s_BrushIdWarn(TEXT("FaceFXStyle.IconWarn"));
 static FName s_BrushIdError(TEXT("FaceFXStyle.IconError"));
@@ -54,16 +56,19 @@ void FFaceFXStyle::Initialize()
 
 	const FString ResourceDir = Plugin->GetBaseDir() / TEXT("Resources");
 
-#define FACEFX_ICON_PATH( RelativePath ) (ResourceDir / RelativePath)
-
-	const FVector2D Icon40(40.F, 40.F);
-    StyleSet->Set(s_BrushIdActor, new FSlateImageBrush(FACEFX_ICON_PATH(TEXT("Icons/facefxactor.png")), Icon40));
-    StyleSet->Set(s_BrushIdAnim, new FSlateImageBrush(FACEFX_ICON_PATH(TEXT("Icons/facefxanim.png")), Icon40));
+#define FACEFX_ICON( RelativePath, Size ) new FSlateImageBrush(ResourceDir / TEXT(RelativePath), Size)
 
 	const FVector2D Icon16(16.F, 16.F);
-    StyleSet->Set(s_BrushIdSuccess, new FSlateImageBrush(FACEFX_ICON_PATH(TEXT("Icons/facefxsuccess.png")), Icon16));
-    StyleSet->Set(s_BrushIdWarn, new FSlateImageBrush(FACEFX_ICON_PATH(TEXT("Icons/facefxwarning.png")), Icon16));
-    StyleSet->Set(s_BrushIdError, new FSlateImageBrush(FACEFX_ICON_PATH(TEXT("Icons/facefxerror.png")), Icon16));
+    StyleSet->Set(s_BrushIdSuccess, FACEFX_ICON("Icons/facefxsuccess.png", Icon16));
+    StyleSet->Set(s_BrushIdWarn, FACEFX_ICON("Icons/facefxwarning.png", Icon16));
+    StyleSet->Set(s_BrushIdError, FACEFX_ICON("Icons/facefxerror.png", Icon16));
+
+    const FVector2D Icon64(64.F, 64.F);
+    StyleSet->Set(s_BrushIdActorIcon, FACEFX_ICON("Icons/icon64.png", Icon16));
+    StyleSet->Set(s_BrushIdActorThumbnail, FACEFX_ICON("Icons/icon16.png", Icon64));
+
+    StyleSet->Set(s_BrushIdAnimIcon, FACEFX_ICON("Icons/icont64.png", Icon16));
+    StyleSet->Set(s_BrushIdAnimThumbnail, FACEFX_ICON("Icons/icon16.png", Icon64));
 
 #undef FACEFX_ICON_PATH
 
@@ -81,14 +86,24 @@ void FFaceFXStyle::Shutdown()
 	}
 }
 
-const FName& FFaceFXStyle::GetBrushIdFxActor()
+const FName& FFaceFXStyle::GetBrushIdFxActorIcon()
 {
-	return s_BrushIdActor;
+	return s_BrushIdActorIcon;
 }
 
-const FName& FFaceFXStyle::GetBrushIdFxAnim()
+const FName& FFaceFXStyle::GetBrushIdFxActorThumbnail()
 {
-	return s_BrushIdAnim;
+	return s_BrushIdActorThumbnail;
+}
+
+const FName& FFaceFXStyle::GetBrushIdFxAnimIcon()
+{
+	return s_BrushIdAnimIcon;
+}
+
+const FName& FFaceFXStyle::GetBrushIdFxAnimThumbnail()
+{
+	return s_BrushIdAnimThumbnail;
 }
 
 const FSlateBrush* FFaceFXStyle::GetBrushStateIconSuccess()
