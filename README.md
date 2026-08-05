@@ -1,37 +1,37 @@
-FaceFX Unreal Engine 5 Plugin
-=============================
+SGX|FaceFX Unreal Engine 5 Plugin
+=================================
 
 NOTE: This is the Unreal Engine 5 plugin. The Unreal Engine 4 plugin is located [here](https://github.com/FaceFX/FaceFX-UE4).
 
-Welcome to the FaceFX Unreal Engine 5 plugin source code!
+Welcome to the SGX|FaceFX Unreal Engine 5 plugin source code!
 
-This repository gives you all the information you need to successfully compile and install the FaceFX UE5 plugin.
+This repository gives you all the information you need to successfully compile and install the SGX|FaceFX UE5 plugin.
 
-The FaceFX UE5 plugin currently supports the Windows, Mac, Xbox One, Xbox Series X|S, PS4, PS5, Nintendo Switch, iOS, and Android platforms.
+The SGX|FaceFX UE5 plugin currently supports the Windows, Mac, Xbox One, Xbox Series X|S, PS4, PS5, Nintendo Switch, Nintendo Switch 2, iOS, and Android platforms.
 
 Important Information
 ---------------------
 
-With the UE5 version 5.8 update, the FaceFX UE5 Plugin has been updated to the FaceFX Runtime v4.0. It is important that you use the FaceFX Runtime v4.0 (or newer) data compiler and FaceFX Studio plugin. If you are upgrading from a previous version of the FaceFX UE5 Plugin, please make sure that you fully update your tool chain to the FaceFX Runtime v4.0 (or newer) as well.
+With the UE5 version 5.8 update, the SGX|FaceFX UE5 Plugin has been updated to the SGX|FaceFX Runtime v4.6. It is important that you use the SGX|FaceFX Runtime v4.6 (or newer) data compiler. If you are upgrading from a previous version of the SGX|FaceFX UE5 Plugin, please make sure that you fully update your tool chain to the SGX|FaceFX Runtime v4.6 (or newer) as well.
 
 License
 -------
 
 Complete licensing information can be found in the [LICENSE.md](LICENSE.md) file located in this repository. The short version is:
 
-- The FaceFX UE5 plugin source code is licensed under the **MIT license** (this is the code that interfaces with UE5; in other words, the code contained in this repository).
+- The SGX|FaceFX UE5 plugin source code is licensed under the **MIT license** (this is the code that interfaces with UE5; in other words, the code contained in this repository).
 
-- The FaceFX Runtime is licensed under the **FaceFX Runtime End User License**. Once the FaceFX UE5 plugin source code is compiled and linked with the FaceFX Runtime, the resulting binary falls under the **FaceFX Runtime End User License**.
+- The SGX|FaceFX Runtime is licensed under the **FaceFX Runtime End User License**. Once the SGX|FaceFX UE5 plugin source code is compiled and linked with the SGX|FaceFX Runtime, the resulting binary falls under the **FaceFX Runtime End User License**.
 
 Supported Unreal Engine 5 versions
 ----------------------------------
 
-The FaceFX UE5 plugin supports UE5 versions 5.5, 5.6, 5.7, and 5.8. It will not work unmodified on earlier versions of UE5.
+The SGX|FaceFX UE5 plugin supports UE5 versions 5.5, 5.6, 5.7, and 5.8. It will not work unmodified on earlier versions of UE5.
 
 Documentation
 -------------
 
-The [FaceFX UE5 Plugin documentation](Documentation/Index.md) is located in the **Documentation** directory of this GitHub repository. Be sure to check out the [Troubleshooting](Documentation/Troubleshooting.md) section if you run into any problems.
+The [SGX\|FaceFX UE5 Plugin documentation](Documentation/Index.md) is located in the **Documentation** directory of this GitHub repository. Be sure to check out the [Troubleshooting](Documentation/Troubleshooting.md) section if you run into any problems.
 
 
 Installation
@@ -39,9 +39,9 @@ Installation
 
 First, make sure that you have obtained a binary build of UE5; or, have obtained, and successfully built, the source code distribution of UE5. More information can be found on [the Unreal Engine website](https://www.unrealengine.com).
 
-There are two ways to obtain the FaceFX UE5 plugin. You can download a pre-built binary version and simply drop it into your UE5 install, or you can build the plugin from source. The quickest way to get up and running is simply to download and install the pre-built version.
+There are two ways to obtain the SGX|FaceFX UE5 plugin. You can download a pre-built binary version and simply drop it into your UE5 install, or you can build the plugin from source. The quickest way to get up and running is simply to download and install the pre-built version.
 
-The following steps describe how to install the FaceFX UE5 plugin:
+The following steps describe how to install the SGX|FaceFX UE5 plugin:
 
 #### Pre-built binaries
 
@@ -80,9 +80,9 @@ First, make sure you are familiar with the process of cloning Unreal Engine from
 
 5. Unzip the FaceFX Runtime distribution .zip file you downloaded in step 2.
 
-6. Inside the extracted folder from step 5 you should find a **facefx-runtime-4.0.0** directory.
+6. Inside the extracted folder from step 5 you should find a **facefx-runtime-4.6.0** directory.
 
-7. Copy the **facefx-runtime-4.0.0** directory into your **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib** directory. You should now have this directory: **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib/facefx-runtime-4.0.0**.
+7. Copy the **facefx-runtime-4.6.0** directory into your **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib** directory. You should now have this directory: **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib/facefx-runtime-4.6.0**.
 
 8. Run the **GenerateProjectFiles.bat** file located in your **UnrealEngine** directory.
 
@@ -102,9 +102,9 @@ First, make sure you are familiar with the process of cloning Unreal Engine from
 
 5. Unzip the FaceFX Runtime distribution .zip file you downloaded in step 2.
 
-6. Inside the extracted folder from step 5 you should find a **facefx-runtime-4.0.0** directory.
+6. Inside the extracted folder from step 5 you should find a **facefx-runtime-4.6.0** directory.
 
-7. Copy the **facefx-runtime-4.0.0** directory into your **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib** directory. You should now have this directory: **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib/facefx-runtime-4.0.0**.
+7. Copy the **facefx-runtime-4.6.0** directory into your **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib** directory. You should now have this directory: **UnrealEngine/Engine/Plugins/Runtime/FaceFX/Source/FaceFXLib/facefx-runtime-4.6.0**.
 
 8. Run the **GenerateProjectFiles.sh** or double-click the **GenerateProjectFiles.command** file located in your **UnrealEngine** directory.
 
@@ -115,6 +115,6 @@ First, make sure you are familiar with the process of cloning Unreal Engine from
 Contributing
 ------------
 
-If you would like to contribute to the development of the FaceFX UE5 plugin, we accept contributions through [pull requests](https://help.github.com/articles/using-pull-requests/) on GitHub. Pull requests should be based on the **master** branch and should be associated with a GitHub [issue](https://help.github.com/articles/about-issues/). We use GitHub issues to track bugs, suggestions, questions, and feature requests.
+If you would like to contribute to the development of the SGX|FaceFX UE5 plugin, we accept contributions through [pull requests](https://help.github.com/articles/using-pull-requests/) on GitHub. Pull requests should be based on the **master** branch and should be associated with a GitHub [issue](https://help.github.com/articles/about-issues/). We use GitHub issues to track bugs, suggestions, questions, and feature requests.
 
-All contributions must be under the **MIT license**, just like the FaceFX UE5 plugin source code itself.
+All contributions must be under the **MIT license**, just like the SGX|FaceFX UE5 plugin source code itself.
