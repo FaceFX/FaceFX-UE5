@@ -24,6 +24,7 @@ SOFTWARE.
 #include "Components/AudioComponent.h"
 #include "Engine/StreamableManager.h"
 #include "GameFramework/Actor.h"
+#include "Engine/World.h"
 
 void FFaceFXAudioDefault::Prepare(const UFaceFXAnim* Animation)
 {

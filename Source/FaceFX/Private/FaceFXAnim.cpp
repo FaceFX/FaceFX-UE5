@@ -21,6 +21,8 @@
 #include "FaceFXAnim.h"
 #include "FaceFX.h"
 #include "Sound/SoundWave.h"
+#include "Misc/Paths.h"
+#include "UObject/Package.h"
 
 #if WITH_EDITORONLY_DATA
 #include "FaceFXBlueprintLibrary.h"

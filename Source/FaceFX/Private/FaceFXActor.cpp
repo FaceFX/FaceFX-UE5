@@ -20,6 +20,8 @@
 
 #include "FaceFXActor.h"
 #include "FaceFX.h"
+#include "Misc/Paths.h"
+#include "UObject/Package.h"
 
 #define LOCTEXT_NAMESPACE "FaceFX"
 
