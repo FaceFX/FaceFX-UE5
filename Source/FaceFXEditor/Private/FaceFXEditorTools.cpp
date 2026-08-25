@@ -527,7 +527,7 @@ bool FFaceFXEditorTools::ReimportOrCreateAnimAssets(const FString& CompilationFo
 					const FString ExistingAssetPath = AssetData.ToSoftObjectPath().ToString();
 					if (!ExistingAssetPath.Contains(SourceAssetFile))
 					{
-						UE_LOG(LogFaceFX, Display, TEXT("FFaceFXEditorTools::ReimportOrCreateAnimAssets. Skipping FaceFXAnim asset %s not created with this FaceFXActor %s"), *ExistingAssetPath, *SourceAssetFile);
+						UE_LOG(LogFaceFX, Verbose, TEXT("FFaceFXEditorTools::ReimportOrCreateAnimAssets. Skipping FaceFXAnim asset %s not created with this FaceFXActor %s"), *ExistingAssetPath, *SourceAssetFile);
 						continue;
 					}
 					AnimRegistry.Emplace(FString::Printf(TEXT("%s_%s_%s"), *SourceAssetFile, *AssetAnimId.Group.ToString(), *AssetAnimId.Name.ToString()), *AssetData.ToSoftObjectPath().ToString());
