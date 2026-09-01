@@ -187,6 +187,71 @@ void FFaceFXAnimationSectionTemplate::TearDown(FPersistentEvaluationData& Persis
 	SharedData->TrackData.Empty();
 }
 
+#if WITH_EDITOR
+static inline bool IsEditorWorld(const UObject* RuntimeObject)
+{
+    const UWorld* World = RuntimeObject ? RuntimeObject->GetWorld() : nullptr;
+	// Editor only; excludes PIE, SIE, standalone, and MRQ/game worlds.
+	return World && World->WorldType == EWorldType::Editor;
+}
+
+static inline bool IsMetaHumanFaceSkeleton(const USkeletalMeshComponent* Mesh)
+{
+    if (!Mesh)
+    {
+        return false;
+    }
+
+    const USkeletalMesh* SkeletalMesh = Mesh->GetSkeletalMeshAsset();
+    const USkeleton* Skeleton = SkeletalMesh ? SkeletalMesh->GetSkeleton() : nullptr;
+
+    if (!Skeleton)
+    {
+        return false;
+    }
+
+    const FStringView Path = Skeleton->GetPathName();
+
+    return Path.Contains(TEXT("/MetaHumans/Common/Face/")) || Skeleton->GetFName() == TEXT("Face_Archetype_Skeleton");
+}
+
+static USkeletalMeshComponent* FindMetaHumanFaceMesh(UObject* RuntimeObject, USkeletalMeshComponent* const DrivenMesh)
+{
+    AActor* Actor = Cast<AActor>(RuntimeObject);
+    if (!Actor)
+    {
+        Actor = RuntimeObject ? RuntimeObject->GetTypedOuter<AActor>() : nullptr;
+    }
+
+    if (!Actor)
+    {
+        return nullptr;
+    }
+
+    TInlineComponentArray<USkeletalMeshComponent*> SkeletalMeshes(Actor);
+
+	USkeletalMeshComponent* FoundFace = nullptr;
+
+    for (USkeletalMeshComponent* Candidate : SkeletalMeshes)
+    {
+		if (!Candidate || Candidate == DrivenMesh || !Candidate->IsRegistered() || !IsMetaHumanFaceSkeleton(Candidate))
+		{
+			continue;
+		}
+
+		// If we find multiple Faces, don't do anything since we aren't sure what to do.
+		if (FoundFace)
+		{
+			return nullptr;
+		}
+
+		FoundFace = Candidate;
+    }
+
+    return FoundFace;
+}
+#endif
+
 void FFaceFXAnimationExecutionToken::Execute(FPersistentEvaluationData& PersistentData, IMovieScenePlayer& Player)
 {
 	check(SectionData.IsValid());
@@ -295,6 +360,21 @@ void FFaceFXAnimationExecutionToken::Execute(FPersistentEvaluationData& Persiste
 			{
 				//enforce an update on the bones to trigger blend nodes
 				SkelMeshTarget->RefreshBoneTransforms();
+
+#if WITH_EDITOR
+				// MetaHuman editor-preview workaround: after FaceFX updates the Body pose,
+				// explicitly refresh the dependent Face component so it consumes the current
+				// Body curve output during Sequencer playback and scrubbing.
+				if (IsEditorWorld(RuntimeObject))
+				{
+				    if (USkeletalMeshComponent* Face = FindMetaHumanFaceMesh(RuntimeObject, SkelMeshTarget))
+				    {
+				        Face->TickPose(0.0f, false);
+				        Face->RefreshBoneTransforms();
+				        Face->MarkRenderDynamicDataDirty();
+				    }
+			    }
+#endif
 			}
 		}
 	}
