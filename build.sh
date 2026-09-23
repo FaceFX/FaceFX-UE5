@@ -43,7 +43,7 @@ RUNTIME_PREFIX="facefx-runtime-"
 RUNTIME_VERSION=""
 
 # Find first directory starting with facefx-runtime-
-RUNTIME_DIRNAME=$(find "$RUNTIME_ROOT" -maxdepth 1 -type d -name "${RUNTIME_PREFIX}*" -printf '%f\n' | head -n 1)
+RUNTIME_DIRNAME=$(find "$RUNTIME_ROOT" -maxdepth 1 -type d -name "${RUNTIME_PREFIX}*" -exec basename {} \; | head -n 1)
 
 if [[ -z "$RUNTIME_DIRNAME" ]]; then
     echo "ERROR: No \"${RUNTIME_PREFIX}*\" directory found in \"$RUNTIME_ROOT\"."
