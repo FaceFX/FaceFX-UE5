@@ -210,7 +210,7 @@ static inline bool IsMetaHumanFaceSkeleton(const USkeletalMeshComponent* Mesh)
         return false;
     }
 
-    const FStringView Path = Skeleton->GetPathName();
+    const FString Path = Skeleton->GetPathName();
 
     return Path.Contains(TEXT("/MetaHumans/Common/Face/")) || Skeleton->GetFName() == TEXT("Face_Archetype_Skeleton");
 }
