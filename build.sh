@@ -15,6 +15,27 @@ LATEST_UE_VERSION="5.8"
 
 UE_VERSION="${1:-$LATEST_UE_VERSION}"
 
+if [[ "$UE_VERSION" == "all" ]]; then
+    IFS=',' read -r -a ALL_UE_VERSIONS <<< "$SUPPORTED_UE_VERSIONS"
+
+    for v in "${ALL_UE_VERSIONS[@]}"; do
+        echo
+        echo "========================================"
+        echo "Building FaceFX for Unreal Engine $v"
+        echo "========================================"
+        echo
+
+        if ! "$SCRIPT_DIR/build.sh" "$v"; then
+            echo "ERROR: Build failed for Unreal Engine $v."
+            exit 1
+        fi
+    done
+
+    echo
+    echo "All builds completed successfully."
+    exit 0
+fi
+
 IFS=',' read -r -a SUPPORTED_UE_VERSION_ARRAY <<< "$SUPPORTED_UE_VERSIONS"
 
 VERSION_OK=0

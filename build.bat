@@ -14,6 +14,27 @@ SET "UE_VERSION=%~1"
 
 IF "%UE_VERSION%"=="" SET "UE_VERSION=%LATEST_UE_VERSION%"
 
+IF /I "%UE_VERSION%"=="all" (
+    FOR %%V IN (%SUPPORTED_UE_VERSIONS%) DO (
+        ECHO.
+        ECHO ========================================
+        ECHO Building FaceFX for Unreal Engine %%V
+        ECHO ========================================
+        ECHO.
+
+        CALL "%~f0" %%V
+
+        IF ERRORLEVEL 1 (
+            ECHO ERROR: Build failed for Unreal Engine %%V.
+            EXIT /B 1
+        )
+    )
+
+    ECHO.
+    ECHO All builds completed successfully.
+    EXIT /B 0
+)
+
 SET "VERSION_OK="
 
 FOR %%V IN (%SUPPORTED_UE_VERSIONS%) DO (
