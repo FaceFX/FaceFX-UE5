@@ -24,7 +24,7 @@ Tutorial
 
 <img src="Images/CustomPayload.png" width="689">
 
-+ Compile the animation using version 2 of the [FaceFX Runtime Compiler](RequirementsAndKeyConcepts.md).
++ Compile the animation using version 2 or higher of the [Runtime Compiler](RequirementsAndKeyConcepts.md).
 
 + Create the OnAnimationEvent node in your character's blueprint by selecting the **FaceFX Component** and adding the **On Animation Event** from the **Events** section of the **Details** tab.
 

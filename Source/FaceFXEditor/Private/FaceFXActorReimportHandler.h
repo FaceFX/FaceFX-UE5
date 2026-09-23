@@ -20,24 +20,20 @@
 
 #pragma once
 
-#include "FaceFX.h"
-#include "HAL/UnrealMemory.h"
+#include "EditorReimportHandler.h"
 
-struct FFaceFXAllocator
+/** Handles re-import of FaceFX actors via drag-and-drop on the Content Browser. */
+class FFaceFXActorReimportHandler final : public FReimportHandler
 {
-    static FxAllocationCallbacks CreateAllocator();
+public:
+    virtual bool CanReimport(UObject* Obj, TArray<FString>& OutFilenames) override;
 
-private:
+    virtual void SetReimportPaths(UObject* Obj, const TArray<FString>& NewReimportPaths) override;
 
-    FFaceFXAllocator(){}
+    virtual EReimportResult::Type Reimport(UObject* Obj) override;
 
-    static inline void* AllocateMemory(size_t ByteCount, size_t Alignment, void* /* pUserData */)
+    virtual int32 GetPriority() const override
     {
-        return FMemory::Malloc(ByteCount, Alignment);
-    }
-
-    static inline void FreeMemory(void* pMemory, size_t Alignment, void* /* pUserData */)
-    {
-        return FMemory::Free(pMemory);
+        return 0;
     }
 };

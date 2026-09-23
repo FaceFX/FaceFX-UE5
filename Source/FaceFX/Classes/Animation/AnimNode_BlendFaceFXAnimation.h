@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2026 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2026 Speech Graphics Ltd. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -29,7 +29,7 @@
 struct FAnimInstanceProxy;
 enum class EFaceFXBlendMode : uint8;
 
-/** Anim graph node that blends in facial animation bone transforms into the pose */
+/** Anim graph node that blends in FaceFX animation into the pose */
 USTRUCT(BlueprintType)
 struct FACEFX_API FAnimNode_BlendFaceFXAnimation : public FAnimNode_Base
 {
@@ -41,15 +41,40 @@ struct FACEFX_API FAnimNode_BlendFaceFXAnimation : public FAnimNode_Base
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Links)
 	FComponentSpacePoseLink ComponentPose;
 
-	/** The strength of blending in the facial animation. Will be capped to .0F to 1.F */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=BlendMode, meta=(PinShownByDefault, UIMin=0.F, UIMax=1.F))
+	// @todo What about the transitions where the node becomes active / inactive?
+
+	/** The blend alpha for FaceFX bones animation. Will be clamped between 0.f and 1.f. */
+	UPROPERTY(EditAnywhere,
+		      BlueprintReadWrite,
+			  Category=BlendMode,
+			  meta=(PinShownByDefault,
+				    UIMin=0.f,
+					UIMax=1.f))
+	float BonesAlpha;
+
+	/** The blend alpha for FaceFX curves animation. Will be clamped between 0.f and 1.f. */
+	UPROPERTY(EditAnywhere,
+		      BlueprintReadWrite,
+			  Category=BlendMode,
+			  meta=(PinShownByDefault,
+				    UIMin=0.f,
+					UIMax=1.f))
+	float CurvesAlpha;
+
+	/** Deprecated (use BonesAlpha or CurvesAlpha instead). */
+	UPROPERTY(EditAnywhere,
+		      BlueprintReadOnly,
+			  Category=BlendMode,
+			  meta=(UIMin=0.f,
+					UIMax=1.f,
+					DeprecatedProperty,
+					DeprecationMessage="Deprecated. Use Bones Alpha or Curves Alpha instead."))
 	float Alpha;
 
 	/** Indicator if stripped name space bone mapping shall be skipped during bone matching phase in case a bone name was not found */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=BoneMapping)
 	bool bSkipBoneMappingWithoutNS;
 
-	// @todo What about the transitions where the node becomes active / inactive?
 	/** The maximum LOD setting under which this node is allowed to run. Defaults to all LOD settings. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Performance, meta = (DisplayName = "LOD Threshold"))
 	int32 LODThreshold;
@@ -66,9 +91,11 @@ struct FACEFX_API FAnimNode_BlendFaceFXAnimation : public FAnimNode_Base
 private:
 
 	/** struct that holds a transform / boneidx mapping */
-	struct FBlendFacialAnimationEntry
+	struct FFaceFXBoneTransformMappingEntry
 	{
-		FBlendFacialAnimationEntry(int32 InBoneIdx, int32 InTransformIdx, const FTransform& InBoneRefPose) : BoneIdx(InBoneIdx), TransformIdx(InTransformIdx)
+		FFaceFXBoneTransformMappingEntry(int32 InBoneIdx, int32 InTransformIdx, const FTransform& InBoneRefPose)
+			: BoneIdx(InBoneIdx)
+			, TransformIdx(InTransformIdx)
 		{
 			BoneRefPoseScale = InBoneRefPose.GetScale3D();
 			BoneRefPoseTranslation = InBoneRefPose.GetTranslation();
@@ -82,8 +109,23 @@ private:
 		FQuat BoneRefPoseRotationInv;
 	};
 
-	/** The bone indices where to copy the transforms into. Based on the bone names coming from the facefx character instance */
-	TArray<FBlendFacialAnimationEntry> BoneIndices;
+	/** The bone indices where to copy the transforms into. Based on the bone names coming from the FaceFX character instance. */
+	TArray<FFaceFXBoneTransformMappingEntry> FaceFXBoneTransformMap;
+
+	/** struct that holds FaceFX curves (name, index) for use with BulkGet() / BulkSet() */
+	struct FFaceFXBulkCurves : UE::Anim::TNamedValueArray<FDefaultAllocator, UE::Anim::FNamedIndexElement>
+	{
+		// Sorts the curves by name. Make sure to call this after all of the curves have been added.
+		void EnsureSorted()
+		{
+			SortElementsIfRequired();
+		}
+	};
+
+	/** The FaceFX curves. These are in the same order as TrackValues from the FaceFX character. */
+	FFaceFXBulkCurves FaceFXCurves;
+	/** The current values of the FaceFX curves in the incoming pose (what we will be lerping with). */
+	TArray<float> CurrentFaceFXCurveValues;
 
 	/**
 	* Try to load the FaceFX character data

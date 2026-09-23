@@ -1,6 +1,6 @@
 ﻿/*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2026 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2026 Speech Graphics Ltd. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -27,7 +27,7 @@ public class FaceFXLib : ModuleRules
     static bool DebugLibsWarningDisplayed = false;
 
     //Update this when updating the FaceFX Runtime version you're using.
-    public static string RuntimeVersion { get { return "2.2.1"; } }
+    public static string RuntimeVersion { get { return "4.6.0"; } }
 
     public static string RuntimeFolderBase { get { return "facefx-runtime-" + RuntimeVersion; } }
 
@@ -136,12 +136,21 @@ public class FaceFXLib : ModuleRules
             throw new BuildException(System.String.Format("FaceFX: cannot find the FaceFX Runtime directory '{0}'", FaceFXDir));
         }
 
-        // Default to VS2019
-        string CompilerFolder = "vs16";
+        // Default to VS2022
+        string CompilerFolder = "vs17";
 
-        if (Target.WindowsPlatform.Compiler == WindowsCompiler.VisualStudio2022)
+        // 5.8 UBT detects VS2026 on my machine even though I do not have it. For now, I've changed the default to VS2022 and link
+        // vs17 for both VS2022 and VS2026 enum values. WindowsCompiler.VisualStudio2026 is not defined earlier than 5.7.
+        if (Target.IsInPlatformGroup(UnrealPlatformGroup.Windows))
         {
-            CompilerFolder = "vs17";
+            if (Target.WindowsPlatform.Compiler != WindowsCompiler.VisualStudio2022
+    #if UE_5_7_OR_LATER
+                && Target.WindowsPlatform.Compiler != WindowsCompiler.VisualStudio2026
+    #endif
+                )
+            {
+                throw new BuildException(System.String.Format("FaceFX: unsupported windows compiler detected '{0}'", Target.WindowsPlatform.Compiler));
+            }
         }
 
         // IMPORTANT NOTE FOR CONSOLES

@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2026 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2026 Speech Graphics Ltd. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -24,6 +24,7 @@
 #include "AssetTypeActions/AssetTypeActions_FaceFXAnim.h"
 #include "FaceFXAnim.h"
 #include "FaceFXCharacter.h"
+#include "FaceFXActorReimportHandler.h"
 #include "FaceFXEditorTools.h"
 #include "FaceFXEditorConfig.h"
 #include "Sequencer/FaceFXSequencer.h"
@@ -52,6 +53,9 @@ class FFaceFXEditorModule : public FDefaultModuleImpl
 			AssetTools.RegisterAssetTypeActions(Action.ToSharedRef());
 		}
 
+		FaceFXActorReimportHandler = MakeUnique<FFaceFXActorReimportHandler>();
+		FReimportManager::Instance()->RegisterHandler(*FaceFXActorReimportHandler);
+
 		FFaceFXStyle::Initialize();
 		FFaceFXSequencer::Get().Initialize();
 
@@ -69,6 +73,12 @@ class FFaceFXEditorModule : public FDefaultModuleImpl
 
 	virtual void ShutdownModule() override
 	{
+		if (FaceFXActorReimportHandler)
+		{
+			FReimportManager::Instance()->UnregisterHandler(*FaceFXActorReimportHandler);
+			FaceFXActorReimportHandler.Reset();
+		}
+
 		if (OnFaceFXCharacterPlayAssetIncompatibleHandle.IsValid() && FModuleManager::Get().IsModuleLoaded("FaceFX"))
 		{
 			UFaceFXCharacter::OnFaceFXCharacterPlayAssetIncompatible.Remove(OnFaceFXCharacterPlayAssetIncompatibleHandle);
@@ -218,6 +228,9 @@ private:
 
 	/** List of currently registered asset type actions */
 	TArray<TSharedPtr<FAssetTypeActions_Base>> AssetTypeActions;
+
+	/** Routes UE's native FaceFX Actor reimport requests into FaceFX's reimport implementation. */
+	TUniquePtr<FFaceFXActorReimportHandler> FaceFXActorReimportHandler;
 };
 
 #undef LOCTEXT_NAMESPACE

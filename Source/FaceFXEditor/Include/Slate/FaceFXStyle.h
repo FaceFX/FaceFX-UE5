@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2026 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2026 Speech Graphics Ltd. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -34,16 +34,28 @@ struct FFaceFXStyle
 	static void Shutdown();
 
 	/**
-	* Gets the brush id for the actor brush
+	* Gets the brush id for the actor icon brush
 	* @returns The id
 	*/
-	static const FName& GetBrushIdFxActor();
+	static const FName& GetBrushIdFxActorIcon();
 
 	/**
-	* Gets the brush id for the animation brush
+	* Gets the brush id for the actor thumbnail brush
 	* @returns The id
 	*/
-	static const FName& GetBrushIdFxAnim();
+	static const FName& GetBrushIdFxActorThumbnail();
+
+	/**
+	* Gets the brush id for the animation icon brush
+	* @returns The id
+	*/
+	static const FName& GetBrushIdFxAnimIcon();
+
+	/**
+	* Gets the brush id for the animation thumbnail brush
+	* @returns The id
+	*/
+	static const FName& GetBrushIdFxAnimThumbnail();
 
 	/**
 	* Gets the brush for the success icon

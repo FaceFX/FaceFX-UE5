@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2026 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2026 Speech Graphics Ltd. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -59,20 +59,20 @@ FString FaceFX::GetFaceFXResultString(FxResult Result)
 {
 	switch (Result)
 	{
-		case FX_SUCCESS:                    return TEXT("Success"); break;
-		case FX_WARNING_LEGACY_DATA_FORMAT: return TEXT("Legacy data format loaded. Please recompile the content."); break;
-		case FX_ERROR_INVALID_ARGUMENT:     return TEXT("Invalid Argument"); break;
-		case FX_ERROR_DATA:                 return TEXT("Invalid Data"); break;
-		case FX_ERROR_INCOMPATIBLE_VERSION: return TEXT("Incompatible Data Version"); break;
-		case FX_ERROR_INCOMPATIBLE_TYPE:    return TEXT("Incompatible Type"); break;
-		case FX_ERROR_SIZE:                 return TEXT("Invalid Data Size"); break;
-		case FX_ERROR_RANGE:                return TEXT("Range Error"); break;
-		case FX_ERROR_VALIDATION_FAILED:    return TEXT("Data Validation Failed (Corrupt Data)"); break;
-		case FX_ERROR_INCOMPATIBLE_HANDLE:  return TEXT("Incompatible Handles"); break;
-		case FX_ERROR_ZOMBIE_HANDLE:        return TEXT("Zombie Handle"); break;
-		case FX_ERROR_NOT_PERMITTED:        return TEXT("Operation Not Permitted"); break;
-		case FX_ERROR_UNKNOWN:              return TEXT("Unknown Error"); break;
-		default: 							return TEXT("Unexpected FxResult Value"); break;
+		case FX_SUCCESS:                    return TEXT("Success");
+		case FX_WARNING_LEGACY_DATA_FORMAT: return TEXT("Legacy data format loaded. Please recompile the content.");
+		case FX_ERROR_INVALID_ARGUMENT:     return TEXT("Invalid Argument");
+		case FX_ERROR_DATA:                 return TEXT("Invalid Data");
+		case FX_ERROR_INCOMPATIBLE_VERSION: return TEXT("Incompatible Data Version");
+		case FX_ERROR_INCOMPATIBLE_TYPE:    return TEXT("Incompatible Type");
+		case FX_ERROR_SIZE:                 return TEXT("Invalid Data Size");
+		case FX_ERROR_RANGE:                return TEXT("Range Error");
+		case FX_ERROR_VALIDATION_FAILED:    return TEXT("Data Validation Failed (Corrupt Data)");
+		case FX_ERROR_INCOMPATIBLE_HANDLE:  return TEXT("Incompatible Handles");
+		case FX_ERROR_ZOMBIE_HANDLE:        return TEXT("Zombie Handle");
+		case FX_ERROR_NOT_PERMITTED:        return TEXT("Operation Not Permitted");
+		case FX_ERROR_UNKNOWN:              return TEXT("Unknown Error");
+		default: 							return TEXT("Unexpected FxResult Value");
 	}
 }
 

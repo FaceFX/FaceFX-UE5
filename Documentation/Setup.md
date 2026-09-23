@@ -1,16 +1,16 @@
 Setup
 =====
 
-FaceFX Studio Professional
---------------------------
+FaceFX Studio
+-------------
 
-After installing FaceFX Studio Professional, you need to install the FaceFX Runtime Plugin for FaceFX Studio. This plugin can be found in the [FaceFX Runtime distribution](https://www.facefx.com/runtime-downloads).
+After installing FaceFX Unlimited, you need to install the Runtime Plugin for FaceFX Studio if you wish to use it. This plugin can be found in the SGX|FaceFX Runtime distribution.
 
-**Note:** The FaceFX Runtime plugin for FaceFX Studio requires FaceFX Studio Professional 2015.1 or newer.
+**Note:** The Runtime plugin for FaceFX Studio requires FaceFX 2026.1 or newer.
 
-To install the plugin, go into your **Documents** folder (e.g. C:\Users\Steve\Documents), navigate into the **FaceFX Studio 2018\Scripts** folder, create a new folder there called **FaceFXRuntime**, and copy the contents of this plugin folder there. For example, after having performed these steps, and assuming your Windows user name is Steve, you should have the following folder on your system:
+To install the plugin, go into your **Documents** folder (e.g. C:\Users\Steve\Documents), navigate into the **FaceFX Studio 2026\Scripts** folder, create a new folder there called **FaceFXRuntime**, and copy the contents of this plugin folder there. For example, after having performed these steps, and assuming your Windows user name is Steve, you should have the following folder on your system:
 
-C:\Users\Steve\Documents\FaceFX Studio 2018\Scripts\FaceFXRuntime
+C:\Users\Steve\Documents\FaceFX Studio 2026\Scripts\FaceFXRuntime
 
 and inside that folder should be the following files:
 
@@ -22,21 +22,19 @@ Restart FaceFX Studio. After restarting FaceFX Studio you should see the option 
 
 #### Optional steps
 
-You can also copy the version of **ffxc.exe** you prefer from **facefx/tools/compiler/bin/windows** into your **FaceFXRuntime** folder to be parallel to the **FaceFXRuntime.py** file. For example, if you prefer the vs12 64-bit version, copy **facefx/tools/compiler/bin/windows/vs12/Release/ffxc.exe** into C:\Users\Steve\Documents\FaceFX Studio 2018\Scripts\FaceFXRuntime. The contents of the **FaceFXRuntime** folder would then be:
+You can also copy the version of **ffxc.exe** you prefer from **facefx/tools/compiler/bin/windows** into your **FaceFXRuntime** folder to be parallel to the **FaceFXRuntime.py** file.
 
-+ \_\_init\_\_.py
-+ FaceFXRuntime.py
-+ README.md
-+ ffxc.exe
-
-If you do not perform this step the plugin will prompt you for the location of **ffxc.exe** when you open its options dialog. **ffxc.exe** can be found in the **facefx/tools/compiler/bin/windows** folder of the [FaceFX Runtime distribution](https://www.facefx.com/runtime-downloads).
+If you do not perform this step the plugin will prompt you for the location of **ffxc.exe** when you open its options dialog. **ffxc.exe** can be found in the **facefx/tools/compiler/bin/windows** folder.
 
 Unreal Engine 5
 ---------------
 
-#### FaceFX UE5 Plugin Setup
+#### SGX|FaceFX UE5 Plugin Setup
 
-Installation and setup instructions for the FaceFX UE5 Plugin can be found in the [README](../README.md).
+Installation and setup instructions for the SGX|FaceFX UE5 Plugin can be found in the [README](../README.md). Once installed, it
+should be enabled for your project:
+
+![](Images/EnablePlugin.png)
 
 #### Character Setup
 

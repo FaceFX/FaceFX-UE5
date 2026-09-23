@@ -1,6 +1,6 @@
 /*******************************************************************************
   The MIT License (MIT)
-  Copyright (c) 2015-2026 OC3 Entertainment, Inc. All rights reserved.
+  Copyright (c) 2015-2026 Speech Graphics Ltd. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -524,6 +524,12 @@ bool FFaceFXEditorTools::ReimportOrCreateAnimAssets(const FString& CompilationFo
 				const FString AssetFolderAbs = FileManager.ConvertToAbsolutePathForExternalAppForRead(*Asset->GetAssetFolder());
 				if (AssetFolderAbs.Equals(SourceAssetFolderAbs, ESearchCase::IgnoreCase))
 				{
+					const FString ExistingAssetPath = AssetData.ToSoftObjectPath().ToString();
+					if (!ExistingAssetPath.Contains(SourceAssetFile))
+					{
+						UE_LOG(LogFaceFX, Verbose, TEXT("FFaceFXEditorTools::ReimportOrCreateAnimAssets. Skipping FaceFXAnim asset %s not created with this FaceFXActor %s"), *ExistingAssetPath, *SourceAssetFile);
+						continue;
+					}
 					AnimRegistry.Emplace(FString::Printf(TEXT("%s_%s_%s"), *SourceAssetFile, *AssetAnimId.Group.ToString(), *AssetAnimId.Name.ToString()), *AssetData.ToSoftObjectPath().ToString());
 				}
 			}

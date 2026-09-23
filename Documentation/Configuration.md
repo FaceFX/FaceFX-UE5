@@ -1,8 +1,8 @@
 Configuration
 =============
 
-The FaceFX UE5 Plugin can be configured with several options contained in Plugins section of the Project Settings in
-UnrealEd
+The SGX|FaceFX UE5 Plugin can be configured with several options contained in the Plugins section of the Project Settings in
+the Unreal Editor.
 
 Editor
 ------
@@ -13,17 +13,17 @@ The absolute path to the FaceFX Studio installation.
 
 ##### Automatically import audio files
 
-Indicates if the audio data (.wav files only) should be automatically imported during the FaceFX Animation import process.
+Indicates if the audio data (.wav files only) should be automatically imported during the animation import process.
 
 ##### Lookup audio assets during import
 
-Indicates if the import should search through all existing **USoundWave** assets and look for an asset that was generated with the linked sound source file (per FaceFX Animation). If one is found it will be used instead of creating a new **USoundWave** asset for the .wav file.
+Indicates if the import should search through all existing **USoundWave** assets and look for an asset that was generated with the linked sound source file (per animation). If one is found it will be used instead of creating a new **USoundWave** asset for the .wav file.
 
 **Note:** This might affect performance when there are a lot of **USoundWave** assets.
 
 ##### Import animations when importing actor
 
-Indicates if animations should be imported during FaceFX actor import. If set to false only the FaceFX Actor asset will be imported or updated.
+Indicates if animations should be imported during actor import. If set to false only the FaceFX Actor asset will be imported or updated.
 
 ##### Lookup animation assets during import
 
@@ -42,14 +42,14 @@ Game
 
 ##### Default Blend Mode
 
-A global FaceFX blend mode setting. This global setting can be overridden in a FaceFX actor.
+A global blend mode setting. This global setting can be overridden in a FaceFX Actor.
 
 - Replace Existing
 
-    FaceFX transforms replace the existing transforms.
+    Bone transforms replace the existing transforms.
 
 - Add to Existing
 
-    FaceFX transforms are additive and add to the existing transforms.
+    Bone transforms are additive and add to the existing transforms.
 
 <img src="Images/PluginGameSettings.png" width="640">
