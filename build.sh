@@ -32,6 +32,25 @@ if [[ "$VERSION_OK" -ne 1 ]]; then
     exit 1
 fi
 
+# Select the Xcode version required for this Unreal Engine version.
+case "$UE_VERSION" in
+    5.5)
+        export DEVELOPER_DIR="/Applications/Xcode-15.4.0.app/Contents/Developer"
+        ;;
+    5.6|5.7)
+        export DEVELOPER_DIR="/Applications/Xcode-16.4.0.app/Contents/Developer"
+        ;;
+    5.8)
+        export DEVELOPER_DIR="/Applications/Xcode-26.6.0.app/Contents/Developer"
+        ;;
+esac
+
+if [[ ! -d "$DEVELOPER_DIR" ]]; then
+    echo "ERROR: Required Xcode installation not found:"
+    echo "  \"$DEVELOPER_DIR\""
+    exit 1
+fi
+
 UE_DIR="/Users/Shared/Epic Games/UE_${UE_VERSION}/Engine"
 UAT_SH="$UE_DIR/Build/BatchFiles/RunUAT.sh"
 PLUGIN_FILE="$SCRIPT_DIR/FaceFX.uplugin"
@@ -67,6 +86,7 @@ if [[ ! -f "$UAT_SH" ]]; then
     exit 1
 fi
 
+echo "Using $(xcodebuild -version | head -n 1)"
 echo "Preparing to build..."
 
 python "$SCRIPT_DIR/UpdatePluginDescriptor.py" "$PLUGIN_FILE" "$UE_VERSION" "$RUNTIME_VERSION"
